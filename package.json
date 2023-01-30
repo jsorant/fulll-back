@@ -10,6 +10,7 @@
     "typescript": "^4.5.4"
   },
   "scripts": {
-    "test": "cucumber-js ./tests/Features/ --profile default "
+    "test": "cucumber-js ./tests/Features/ --profile default ",
+    "test:only": "cucumber-js ./tests/Features/ --profile default --tags \"@only\""
   }
 }
