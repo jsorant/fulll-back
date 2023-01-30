@@ -26,7 +26,8 @@ export class Fleet implements RootAggregate {
   }
 
   register(vehicle: Vehicle): void {
-    this.vehicles.push(vehicle);
+    this.ensureVehiculeIsNotAlreadyRegistered(vehicle);
+    this.addVehicule(vehicle);
   }
 
   getId(): string {
@@ -38,5 +39,27 @@ export class Fleet implements RootAggregate {
       this.id,
       this.vehicles.map((element) => element.makeSnapshot())
     );
+  }
+
+  private ensureVehiculeIsNotAlreadyRegistered(vehicle: Vehicle): void {
+    if (this.contains(vehicle)) {
+      throw new Error(
+        `Vehicule '${vehicle.getPlate()}' has already been registered into fleet '${
+          this.id
+        }'.`
+      );
+    }
+  }
+
+  private contains(vehicle: Vehicle): boolean {
+    return (
+      this.vehicles.find(
+        (element) => element.getPlate() === vehicle.getPlate()
+      ) !== undefined
+    );
+  }
+
+  private addVehicule(vehicle: Vehicle): void {
+    this.vehicles.push(vehicle);
   }
 }

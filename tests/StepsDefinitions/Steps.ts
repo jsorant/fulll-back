@@ -15,9 +15,11 @@ import { VehicleProjection } from "../../src/App/Queries/Views/VehicleProjection
 let dataPersistence: FleetRepository & ProjectionsPersistence;
 let myFleetId: string;
 let vehiclePlate: string;
+let lastError: any | undefined;
 
 Before(async function () {
   resetPersistenceLayer();
+  lastError = undefined;
 });
 
 Given("my fleet", async function () {
@@ -32,11 +34,7 @@ Given("a vehicle", function () {
 });
 
 When("I register this vehicle into my fleet", async function () {
-  const command: RegisterVehicle = new RegisterVehicle(vehiclePlate, myFleetId);
-  const handler: RegisterVehicleHandler = new RegisterVehicleHandler(
-    dataPersistence
-  );
-  await handler.execute(command);
+  await registerVehicleIntoMyFleet();
 });
 
 Then("this vehicle should be part of my vehicle fleet", async function () {
@@ -44,11 +42,46 @@ Then("this vehicle should be part of my vehicle fleet", async function () {
   const handler: ListVehiclesHandler = new ListVehiclesHandler(dataPersistence);
   const vehicles: Array<VehicleProjection> = await handler.execute(query);
 
-  assert(isVehiculeInArray(vehiclePlate, vehicles));
+  assert(
+    isVehiculeInArray(vehiclePlate, vehicles),
+    "The vehicule is not part of my vehicle fleet"
+  );
 });
+
+Given("I have registered this vehicle into my fleet", async function () {
+  await registerVehicleIntoMyFleet();
+});
+
+When("I try to register this vehicle into my fleet", async function () {
+  try {
+    await registerVehicleIntoMyFleet();
+  } catch (error: any) {
+    lastError = error;
+  }
+});
+
+Then(
+  "I should be informed this this vehicle has already been registered into my fleet",
+  function () {
+    assert(lastError !== undefined, "No error was thrown");
+    assert(lastError instanceof Error, "'lastError' is not of type Error");
+    assert.strictEqual(
+      (lastError as Error).message,
+      `Vehicule '${vehiclePlate}' has already been registered into fleet '${myFleetId}'.`
+    );
+  }
+);
 
 function resetPersistenceLayer(): void {
   dataPersistence = new InMemoryDataPersistence();
+}
+
+async function registerVehicleIntoMyFleet(): Promise<void> {
+  const command: RegisterVehicle = new RegisterVehicle(vehiclePlate, myFleetId);
+  const handler: RegisterVehicleHandler = new RegisterVehicleHandler(
+    dataPersistence
+  );
+  await handler.execute(command);
 }
 
 function isVehiculeInArray(
