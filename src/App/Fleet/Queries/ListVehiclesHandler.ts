@@ -1,7 +1,7 @@
 import { ProjectionsPersistence } from "./Ports/ProjectionsPersistence";
 import { QueryHandler } from "../../CqrsModel/QueryHandler";
 import { ListRegisteredVehicles } from "./ListVehicles";
-import { RegisteredVehiclesProjection } from "./Views/RegisteredVehiculesProjection";
+import { RegisteredVehiclesProjection } from "./Views/RegisteredVehiclesProjection";
 
 export class ListRegisteredVehiclesHandler
   implements QueryHandler<ListRegisteredVehicles, RegisteredVehiclesProjection>
@@ -15,7 +15,7 @@ export class ListRegisteredVehiclesHandler
   async execute(
     query: ListRegisteredVehicles
   ): Promise<RegisteredVehiclesProjection> {
-    return await this.projectionsPersistence.getRegisteredVehiculesProjection(
+    return await this.projectionsPersistence.getRegisteredVehiclesProjection(
       query.fleetId
     );
   }

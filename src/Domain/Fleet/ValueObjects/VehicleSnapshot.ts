@@ -1,7 +1,11 @@
-export class VehicleSnapshot {
-  public readonly licensePlate: string;
+import { Location } from "./Location";
 
-  constructor(licensePlate: string) {
-    this.licensePlate = Object.freeze(licensePlate);
+export class VehicleSnapshot {
+  public readonly plateNumber: string;
+  public readonly location?: Location;
+
+  constructor(plateNumber: string, location?: Location) {
+    this.plateNumber = Object.freeze(plateNumber);
+    this.location = Object.freeze(location);
   }
 }

@@ -10,7 +10,12 @@ import { InMemoryDataPersistence } from "../../src/Infra/InMemoryFleetRepository
 import { ListRegisteredVehicles } from "../../src/App/Fleet/Queries/ListVehicles";
 import { ListRegisteredVehiclesHandler } from "../../src/App/Fleet/Queries/ListVehiclesHandler";
 import { ProjectionsPersistence } from "../../src/App/Fleet/Queries/Ports/ProjectionsPersistence";
-import { RegisteredVehiclesProjection } from "../../src/App/Fleet/Queries/Views/RegisteredVehiculesProjection";
+import { RegisteredVehiclesProjection } from "../../src/App/Fleet/Queries/Views/RegisteredVehiclesProjection";
+import { ParkVehicle } from "../../src/App/Fleet/Commands/ParkVehicle";
+import { ParkVehicleHandler } from "../../src/App/Fleet/Commands/ParkVehicleHandler";
+import { VehicleLocationProjection } from "../../src/App/Fleet/Queries/Views/VehiculeLocationProjection";
+import { GetVehiculeLocation } from "../../src/App/Fleet/Queries/GetVehiculeLocation";
+import { GetVehiculeLocationHandler } from "../../src/App/Fleet/Queries/GetVehiculeLocationHandler";
 
 let dataPersistence: FleetRepository & ProjectionsPersistence;
 const myFleetId: string = "my_fleet_id";
@@ -62,12 +67,12 @@ Then("this vehicle should be part of my vehicle fleet", async function () {
   const query: ListRegisteredVehicles = new ListRegisteredVehicles(myFleetId);
   const handler: ListRegisteredVehiclesHandler =
     new ListRegisteredVehiclesHandler(dataPersistence);
-  const registeredVehicules: RegisteredVehiclesProjection =
+  const registeredVehicles: RegisteredVehiclesProjection =
     await handler.execute(query);
 
   assert(
-    isVehiculeRegistered(vehiclePlateNumber, registeredVehicules),
-    "The vehicule is not part of my vehicle fleet"
+    isVehicleRegistered(vehiclePlateNumber, registeredVehicles),
+    "The vehicle is not part of my vehicle fleet"
   );
 });
 
@@ -78,7 +83,48 @@ Then(
     assert(lastError instanceof Error, "'lastError' is not of type Error");
     assert.strictEqual(
       (lastError as Error).message,
-      `Vehicule with plate number '${vehiclePlateNumber}' has already been registered into fleet '${myFleetId}'.`
+      `Vehicle with plate number '${vehiclePlateNumber}' has already been registered into fleet '${myFleetId}'.`
+    );
+  }
+);
+
+const locationLatitudeDegrees: number = 45;
+const locationLongitudeDegrees: number = 100;
+const locationAltitudeMeters: number = 1000;
+
+Given("a location", function () {
+  // Defined by:
+  //  'locationLatitudeDegrees'
+  //  'locationLongitudeDegrees'
+  //  'locationAltitudeMeters'
+});
+
+When("I park my vehicle at this location", async function () {
+  const command: ParkVehicle = new ParkVehicle(
+    myFleetId,
+    vehiclePlateNumber,
+    locationLatitudeDegrees,
+    locationLongitudeDegrees,
+    locationAltitudeMeters
+  );
+  const handler: ParkVehicleHandler = new ParkVehicleHandler(dataPersistence);
+  await handler.execute(command);
+});
+
+Then(
+  "the known location of my vehicle should verify this location",
+  async function () {
+    const query: GetVehiculeLocation = new GetVehiculeLocation(
+      myFleetId,
+      vehiclePlateNumber
+    );
+    const handler: GetVehiculeLocationHandler = new GetVehiculeLocationHandler(
+      dataPersistence
+    );
+    const location: VehicleLocationProjection = await handler.execute(query);
+    assert(
+      isExpectedLocation(location),
+      "The vehicle location does not match expected location"
     );
   }
 );
@@ -112,13 +158,21 @@ async function registerVehicleInto(fleetId: string): Promise<void> {
   await handler.execute(command);
 }
 
-function isVehiculeRegistered(
+function isVehicleRegistered(
   vehicleToCheckPlateNumber: string,
-  registeredVehicules: RegisteredVehiclesProjection
+  registeredVehicles: RegisteredVehiclesProjection
 ): boolean {
   return (
-    registeredVehicules.vehicules.find(
-      (vehicule) => vehicule.plateNumber === vehicleToCheckPlateNumber
+    registeredVehicles.vehicles.find(
+      (vehicle) => vehicle.plateNumber === vehicleToCheckPlateNumber
     ) !== undefined
+  );
+}
+
+function isExpectedLocation(location: VehicleLocationProjection): boolean {
+  return (
+    location.latitudeDegrees === locationLatitudeDegrees &&
+    location.longitudeDegrees === locationLongitudeDegrees &&
+    location.altitudeMeters === locationAltitudeMeters
   );
 }

@@ -2,14 +2,15 @@ import { RootAggregate } from "../DddModel/RootAggregate";
 import { FleetSnapshot } from "./FleetSnapshot";
 import { FleetId } from "./ValueObjects/FleetId";
 import { Vehicle } from "./ValueObjects/Vehicle";
+import { Location } from "./ValueObjects/Location";
 
 export class Fleet implements RootAggregate {
   private readonly id: FleetId;
-  private readonly registeredVehicules: Array<Vehicle>;
+  private readonly registeredVehicles: Array<Vehicle>;
 
-  private constructor(id: FleetId, registeredVehicules: Array<Vehicle>) {
+  private constructor(id: FleetId, registeredVehicles: Array<Vehicle>) {
     this.id = Object.freeze(id);
-    this.registeredVehicules = registeredVehicules;
+    this.registeredVehicles = registeredVehicles;
   }
 
   static makeNewFleet(id: string) {
@@ -25,29 +26,51 @@ export class Fleet implements RootAggregate {
 
   register(vehiclePlateNumber: string): void {
     const vehicle: Vehicle = Vehicle.make(vehiclePlateNumber);
-    this.ensureVehiculeIsNotAlreadyRegistered(vehicle);
+    this.ensureVehicleIsNotAlreadyRegistered(vehicle);
     this.doRegister(vehicle);
+  }
+
+  parkVehicle(
+    vehiclePlateNumber: string,
+    latitudeDegrees: number,
+    longitudeDegrees: number,
+    altitudeMeters?: number
+  ): void {
+    const location: Location = new Location(
+      latitudeDegrees,
+      longitudeDegrees,
+      altitudeMeters
+    );
+    //TODO remove
+    const vehicleToFind: Vehicle = Vehicle.make(vehiclePlateNumber);
+    const vehicle: Vehicle | undefined = this.findVehicle(vehicleToFind);
+    if (vehicle === undefined) {
+      throw new Error(
+        `Vehicle with plate number '${vehiclePlateNumber}' is not registered into fleet '${this.id.value}'.`
+      );
+    }
+    vehicle.park(location);
   }
 
   makeSnapshot(): FleetSnapshot {
     return new FleetSnapshot(
       this.id.value,
-      this.registeredVehicules.map((vehicle) => vehicle.makeSnapshot())
+      this.registeredVehicles.map((vehicle) => vehicle.makeSnapshot())
     );
   }
 
   private static makeRegisteredVehiclesFromSnapshot(
     snapshot: FleetSnapshot
   ): Array<Vehicle> {
-    return snapshot.registeredVehicules.map((vehicle) =>
-      Vehicle.make(vehicle.licensePlate)
+    return snapshot.registeredVehicles.map((vehicle) =>
+      Vehicle.make(vehicle.plateNumber)
     );
   }
 
-  private ensureVehiculeIsNotAlreadyRegistered(vehicle: Vehicle): void {
+  private ensureVehicleIsNotAlreadyRegistered(vehicle: Vehicle): void {
     if (this.isRegistered(vehicle)) {
       throw new Error(
-        `Vehicule with plate number '${vehicle.getDisplayablePlateNumber()}' has already been registered into fleet '${
+        `Vehicle with plate number '${vehicle.getDisplayablePlateNumber()}' has already been registered into fleet '${
           this.id.value
         }'.`
       );
@@ -55,14 +78,17 @@ export class Fleet implements RootAggregate {
   }
 
   private isRegistered(vehicle: Vehicle): boolean {
-    return (
-      this.registeredVehicules.find((registeredVehicule) =>
-        registeredVehicule.equals(vehicle)
-      ) !== undefined
+    return this.findVehicle(vehicle) !== undefined;
+  }
+
+  private findVehicle(vehicle: Vehicle): Vehicle | undefined {
+    // TODO search by key => vehicle is an entity
+    return this.registeredVehicles.find((registeredVehicle) =>
+      registeredVehicle.equals(vehicle)
     );
   }
 
   private doRegister(vehicle: Vehicle): void {
-    this.registeredVehicules.push(vehicle);
+    this.registeredVehicles.push(vehicle);
   }
 }
