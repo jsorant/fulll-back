@@ -1,6 +1,6 @@
-import { Query } from "../CqrsModel/Query";
+import { Query } from "../../CqrsModel/Query";
 
-export class ListVehicles implements Query {
+export class ListRegisteredVehicles implements Query {
   public readonly fleetId: string;
 
   constructor(fleetId: string) {

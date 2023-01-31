@@ -1,21 +1,21 @@
 import assert from "assert";
 import { Given, When, Then, Before } from "@cucumber/cucumber";
 
-import { CreateFleet } from "../../src/App/Commands/CreateFleet";
-import { CreateFleetHandler } from "../../src/App/Commands/CreateFleetHandler";
-import { RegisterVehicle } from "../../src/App/Commands/RegisterVehicle";
-import { RegisterVehicleHandler } from "../../src/App/Commands/RegisterVehicleHandler";
-import { FleetRepository } from "../../src/App/Commands/Ports/FleetRepository";
+import { CreateFleet } from "../../src/App/Fleet/Commands/CreateFleet";
+import { CreateFleetHandler } from "../../src/App/Fleet/Commands/CreateFleetHandler";
+import { RegisterVehicle } from "../../src/App/Fleet/Commands/RegisterVehicle";
+import { RegisterVehicleHandler } from "../../src/App/Fleet/Commands/RegisterVehicleHandler";
+import { FleetRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
 import { InMemoryDataPersistence } from "../../src/Infra/InMemoryFleetRepository";
-import { ListVehicles } from "../../src/App/Queries/ListVehicles";
-import { ListVehiclesHandler } from "../../src/App/Queries/ListVehiclesHandler";
-import { ProjectionsPersistence } from "../../src/App/Queries/Ports/ProjectionsPersistence";
-import { VehicleProjection } from "../../src/App/Queries/Views/VehicleProjection";
+import { ListRegisteredVehicles } from "../../src/App/Fleet/Queries/ListVehicles";
+import { ListRegisteredVehiclesHandler } from "../../src/App/Fleet/Queries/ListVehiclesHandler";
+import { ProjectionsPersistence } from "../../src/App/Fleet/Queries/Ports/ProjectionsPersistence";
+import { RegisteredVehiclesProjection } from "../../src/App/Fleet/Queries/Views/RegisteredVehiculesProjection";
 
 let dataPersistence: FleetRepository & ProjectionsPersistence;
 const myFleetId: string = "my_fleet_id";
 const anotherUserFleetId: string = "another_user_fleet_id";
-const vehiclePlate: string = "vehicle_plate";
+const vehiclePlateNumber: string = "vehicle_plate_number";
 let lastError: any | undefined;
 
 Before(async function () {
@@ -31,22 +31,22 @@ Given("a vehicle", function () {
   // Defined by 'vehiclePlate'
 });
 
-When("I register this vehicle into my fleet", async function () {
+Given("I have registered this vehicle into my fleet", async function () {
   await registerVehicleIntoMyFleet();
 });
 
-Then("this vehicle should be part of my vehicle fleet", async function () {
-  const query: ListVehicles = new ListVehicles(myFleetId);
-  const handler: ListVehiclesHandler = new ListVehiclesHandler(dataPersistence);
-  const vehicles: Array<VehicleProjection> = await handler.execute(query);
-
-  assert(
-    isVehiculeInArray(vehiclePlate, vehicles),
-    "The vehicule is not part of my vehicle fleet"
-  );
+Given("the fleet of another user", async function () {
+  await createFleet(anotherUserFleetId);
 });
 
-Given("I have registered this vehicle into my fleet", async function () {
+Given(
+  "this vehicle has been registered into the other user's fleet",
+  async function () {
+    await registerVehicleIntoAnotherUserFleet();
+  }
+);
+
+When("I register this vehicle into my fleet", async function () {
   await registerVehicleIntoMyFleet();
 });
 
@@ -58,6 +58,19 @@ When("I try to register this vehicle into my fleet", async function () {
   }
 });
 
+Then("this vehicle should be part of my vehicle fleet", async function () {
+  const query: ListRegisteredVehicles = new ListRegisteredVehicles(myFleetId);
+  const handler: ListRegisteredVehiclesHandler =
+    new ListRegisteredVehiclesHandler(dataPersistence);
+  const registeredVehicules: RegisteredVehiclesProjection =
+    await handler.execute(query);
+
+  assert(
+    isVehiculeRegistered(vehiclePlateNumber, registeredVehicules),
+    "The vehicule is not part of my vehicle fleet"
+  );
+});
+
 Then(
   "I should be informed this this vehicle has already been registered into my fleet",
   function () {
@@ -65,19 +78,8 @@ Then(
     assert(lastError instanceof Error, "'lastError' is not of type Error");
     assert.strictEqual(
       (lastError as Error).message,
-      `Vehicule '${vehiclePlate}' has already been registered into fleet '${myFleetId}'.`
+      `Vehicule with plate number '${vehiclePlateNumber}' has already been registered into fleet '${myFleetId}'.`
     );
-  }
-);
-
-Given("the fleet of another user", async function () {
-  await createFleet(anotherUserFleetId);
-});
-
-Given(
-  "this vehicle has been registered into the other user's fleet",
-  async function () {
-    await registerVehicleIntoAnotherUserFleet();
   }
 );
 
@@ -100,18 +102,23 @@ async function registerVehicleIntoAnotherUserFleet(): Promise<void> {
 }
 
 async function registerVehicleInto(fleetId: string): Promise<void> {
-  const command: RegisterVehicle = new RegisterVehicle(vehiclePlate, fleetId);
+  const command: RegisterVehicle = new RegisterVehicle(
+    vehiclePlateNumber,
+    fleetId
+  );
   const handler: RegisterVehicleHandler = new RegisterVehicleHandler(
     dataPersistence
   );
   await handler.execute(command);
 }
 
-function isVehiculeInArray(
-  vehiclePlate: string,
-  vehicles: Array<VehicleProjection>
+function isVehiculeRegistered(
+  vehicleToCheckPlateNumber: string,
+  registeredVehicules: RegisteredVehiclesProjection
 ): boolean {
   return (
-    vehicles.find((element) => element.plate === vehiclePlate) !== undefined
+    registeredVehicules.vehicules.find(
+      (vehicule) => vehicule.plateNumber === vehicleToCheckPlateNumber
+    ) !== undefined
   );
 }

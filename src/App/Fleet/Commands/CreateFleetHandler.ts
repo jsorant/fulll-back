@@ -1,5 +1,5 @@
-import { CommandHandler } from "../CqrsModel/CommandHandler";
-import { Fleet } from "../../Domain/Fleet/Fleet";
+import { CommandHandler } from "../../CqrsModel/CommandHandler";
+import { Fleet } from "../../../Domain/Fleet/Fleet";
 import { FleetRepository } from "./Ports/FleetRepository";
 import { CreateFleet } from "./CreateFleet";
 

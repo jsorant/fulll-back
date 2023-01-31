@@ -1,11 +1,11 @@
-import { VehicleSnapshot } from "./Entities/VehicleSnapshot";
+import { VehicleSnapshot } from "./ValueObjects/VehicleSnapshot";
 
 export class FleetSnapshot {
   public readonly id: string;
-  public readonly vehicles: Array<VehicleSnapshot>;
+  public readonly registeredVehicules: Array<VehicleSnapshot>;
 
-  constructor(id: string, vehicles: Array<VehicleSnapshot>) {
+  constructor(id: string, registeredVehicules: Array<VehicleSnapshot>) {
     this.id = id;
-    this.vehicles = vehicles;
+    this.registeredVehicules = registeredVehicules;
   }
 }

@@ -1,6 +1,5 @@
-import { Vehicle } from "../../Domain/Fleet/Entities/Vehicle";
-import { Fleet } from "../../Domain/Fleet/Fleet";
-import { CommandHandler } from "../CqrsModel/CommandHandler";
+import { Fleet } from "../../../Domain/Fleet/Fleet";
+import { CommandHandler } from "../../CqrsModel/CommandHandler";
 import { FleetRepository } from "./Ports/FleetRepository";
 import { RegisterVehicle } from "./RegisterVehicle";
 
@@ -13,8 +12,7 @@ export class RegisterVehicleHandler implements CommandHandler<RegisterVehicle> {
 
   async execute(command: RegisterVehicle): Promise<void> {
     const fleet: Fleet = await this.fleetRepository.getFleet(command.fleetId);
-    const vehicle: Vehicle = new Vehicle(command.plate);
-    fleet.register(vehicle);
+    fleet.register(command.plateNumber);
     this.fleetRepository.saveFleet(fleet);
   }
 }

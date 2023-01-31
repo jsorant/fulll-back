@@ -1,4 +1,4 @@
-import { Fleet } from "../../../Domain/Fleet/Fleet";
+import { Fleet } from "../../../../Domain/Fleet/Fleet";
 
 export interface FleetRepository {
   getFleet(id: string): Promise<Fleet>;

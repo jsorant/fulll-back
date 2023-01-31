@@ -1,8 +1,10 @@
-import { FleetRepository } from "../App/Commands/Ports/FleetRepository";
-import { ProjectionsPersistence } from "../App/Queries/Ports/ProjectionsPersistence";
-import { VehicleProjection } from "../App/Queries/Views/VehicleProjection";
+import { FleetRepository } from "../App/Fleet/Commands/Ports/FleetRepository";
+import { ProjectionsPersistence } from "../App/Fleet/Queries/Ports/ProjectionsPersistence";
+import { RegisteredVehiclesProjection } from "../App/Fleet/Queries/Views/RegisteredVehiculesProjection";
+import { VehicleProjection } from "../App/Fleet/Queries/Views/VehicleProjection";
 import { Fleet } from "../Domain/Fleet/Fleet";
 import { FleetSnapshot } from "../Domain/Fleet/FleetSnapshot";
+import { VehicleSnapshot } from "../Domain/Fleet/ValueObjects/VehicleSnapshot";
 
 export class InMemoryDataPersistence
   implements FleetRepository, ProjectionsPersistence
@@ -18,17 +20,17 @@ export class InMemoryDataPersistence
 
   async saveFleet(fleet: Fleet): Promise<void> {
     const snapshot: FleetSnapshot = fleet.makeSnapshot();
-    this.removeFleet(fleet.getId());
+    this.removeFleet(snapshot.id);
     this.fleets.push(snapshot);
   }
 
   // ProjectionsPersistence implementations
 
-  async getVehiculeListProjection(
+  async getRegisteredVehiculesProjection(
     fleetId: string
-  ): Promise<Array<VehicleProjection>> {
+  ): Promise<RegisteredVehiclesProjection> {
     const snapshot: FleetSnapshot = this.findFleetSnapshot(fleetId);
-    return this.makeVehicleProjectionArray(snapshot);
+    return this.makeRegisteredVehiclesProjection(snapshot);
   }
 
   private removeFleet(fleetId: string): void {
@@ -47,11 +49,23 @@ export class InMemoryDataPersistence
     return foundFleet;
   }
 
-  private makeVehicleProjectionArray(
+  private makeRegisteredVehiclesProjection(
     snapshot: FleetSnapshot
-  ): Array<VehicleProjection> {
-    return snapshot.vehicles.map(
-      (element) => new VehicleProjection(element.plate)
+  ): RegisteredVehiclesProjection {
+    return new RegisteredVehiclesProjection(
+      this.makeVehiclesProjection(snapshot.registeredVehicules)
     );
+  }
+
+  private makeVehiclesProjection(
+    vehiclesSnapshot: Array<VehicleSnapshot>
+  ): Array<VehicleProjection> {
+    return vehiclesSnapshot.map(this.makeVehicleProjection);
+  }
+
+  private makeVehicleProjection(
+    vehicleSnapshot: VehicleSnapshot
+  ): VehicleProjection {
+    return new VehicleProjection(vehicleSnapshot.licensePlate);
   }
 }
