@@ -5,6 +5,7 @@
 
 # Improvements
 
+- Simplify DTO (view) and Entity/VO data
 - Implement a better deep equal method (npm deep-equal ?)
 - Implement a generic clone method
 - CI/CD

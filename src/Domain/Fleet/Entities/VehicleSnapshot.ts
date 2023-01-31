@@ -1,4 +1,4 @@
-import { Location } from "./Location";
+import { Location } from "../ValueObjects/Location";
 
 export class VehicleSnapshot {
   public readonly plateNumber: string;

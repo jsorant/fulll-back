@@ -5,7 +5,7 @@ import { VehicleProjection } from "../App/Fleet/Queries/Views/VehicleProjection"
 import { VehicleLocationProjection } from "../App/Fleet/Queries/Views/VehiculeLocationProjection";
 import { Fleet } from "../Domain/Fleet/Fleet";
 import { FleetSnapshot } from "../Domain/Fleet/FleetSnapshot";
-import { VehicleSnapshot } from "../Domain/Fleet/ValueObjects/VehicleSnapshot";
+import { VehicleSnapshot } from "../Domain/Fleet/Entities/VehicleSnapshot";
 
 export class InMemoryDataPersistence
   implements FleetRepository, ProjectionsPersistence

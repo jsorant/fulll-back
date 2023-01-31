@@ -99,16 +99,20 @@ Given("a location", function () {
   //  'locationAltitudeMeters'
 });
 
+Given("my vehicle has been parked into this location", async function () {
+  await parkVehicle();
+});
+
 When("I park my vehicle at this location", async function () {
-  const command: ParkVehicle = new ParkVehicle(
-    myFleetId,
-    vehiclePlateNumber,
-    locationLatitudeDegrees,
-    locationLongitudeDegrees,
-    locationAltitudeMeters
-  );
-  const handler: ParkVehicleHandler = new ParkVehicleHandler(dataPersistence);
-  await handler.execute(command);
+  await parkVehicle();
+});
+
+When("I try to park my vehicle at this location", async function () {
+  try {
+    await parkVehicle();
+  } catch (error: any) {
+    lastError = error;
+  }
 });
 
 Then(
@@ -125,6 +129,18 @@ Then(
     assert(
       isExpectedLocation(location),
       "The vehicle location does not match expected location"
+    );
+  }
+);
+
+Then(
+  "I should be informed that my vehicle is already parked at this location",
+  function () {
+    assert(lastError !== undefined, "No error was thrown");
+    assert(lastError instanceof Error, "'lastError' is not of type Error");
+    assert.strictEqual(
+      (lastError as Error).message,
+      `Vehicle is already parked at this location.`
     );
   }
 );
@@ -155,6 +171,18 @@ async function registerVehicleInto(fleetId: string): Promise<void> {
   const handler: RegisterVehicleHandler = new RegisterVehicleHandler(
     dataPersistence
   );
+  await handler.execute(command);
+}
+
+async function parkVehicle(): Promise<void> {
+  const command: ParkVehicle = new ParkVehicle(
+    myFleetId,
+    vehiclePlateNumber,
+    locationLatitudeDegrees,
+    locationLongitudeDegrees,
+    locationAltitudeMeters
+  );
+  const handler: ParkVehicleHandler = new ParkVehicleHandler(dataPersistence);
   await handler.execute(command);
 }
 

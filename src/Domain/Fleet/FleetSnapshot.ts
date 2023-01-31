@@ -1,4 +1,4 @@
-import { VehicleSnapshot } from "./ValueObjects/VehicleSnapshot";
+import { VehicleSnapshot } from "./Entities/VehicleSnapshot";
 
 export class FleetSnapshot {
   public readonly id: string;
