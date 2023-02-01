@@ -11,8 +11,9 @@ export class Location extends ValueObject {
     altitudeMeters?: number
   ) {
     super();
-    this.latitudeDegrees = Object.freeze(latitudeDegrees);
-    this.longitudeDegrees = Object.freeze(longitudeDegrees);
-    this.altitudeMeters = Object.freeze(altitudeMeters);
+    this.latitudeDegrees = latitudeDegrees;
+    this.longitudeDegrees = longitudeDegrees;
+    this.altitudeMeters = altitudeMeters;
+    Object.freeze(this);
   }
 }

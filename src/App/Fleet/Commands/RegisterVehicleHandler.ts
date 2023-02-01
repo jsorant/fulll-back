@@ -10,7 +10,7 @@ export class RegisterVehicleHandler implements CommandHandler<RegisterVehicle> {
     this.fleetRepository = fleetRepository;
   }
 
-  async execute(command: RegisterVehicle): Promise<void> {
+  async handle(command: RegisterVehicle): Promise<void> {
     const fleet: Fleet = await this.fleetRepository.getFleet(command.fleetId);
     fleet.register(command.plateNumber);
     this.fleetRepository.saveFleet(fleet);

@@ -1,11 +1,11 @@
 import { Command } from "../../CqrsModel/Command";
 
 export class RegisterVehicle implements Command {
-  public readonly fleetId: string;
-  public readonly plateNumber: string;
+  readonly plateNumber: string;
+  readonly fleetId: string;
 
   constructor(plateNumber: string, fleetId: string) {
-    this.fleetId = fleetId;
     this.plateNumber = plateNumber;
+    this.fleetId = fleetId;
   }
 }

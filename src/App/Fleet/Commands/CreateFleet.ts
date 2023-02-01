@@ -1,9 +1,9 @@
 import { Command } from "../../CqrsModel/Command";
 
 export class CreateFleet implements Command {
-  readonly fleetId: string;
+  readonly userId: string;
 
-  constructor(fleetId: string) {
-    this.fleetId = fleetId;
+  constructor(userId: string) {
+    this.userId = userId;
   }
 }

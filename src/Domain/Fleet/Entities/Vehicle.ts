@@ -1,18 +1,15 @@
 import { PlateNumber as PlateNumber } from "../ValueObjects/PlateNumber";
-import { VehicleSnapshot } from "./VehicleSnapshot";
 import { Location } from "../ValueObjects/Location";
 import { Entity } from "../../DddModel/entity";
 
-export class Vehicle extends Entity<PlateNumber> {
-  private currentLocation: Location | undefined;
+export class Vehicle extends Entity {
+  private readonly plateNumber: PlateNumber;
+  private location: Location | undefined;
 
-  constructor(plateNumber: string, currentLocation?: Location) {
-    super(new PlateNumber(plateNumber));
-    this.currentLocation = currentLocation;
-  }
-
-  getDisplayablePlateNumber(): string {
-    return this.id.value;
+  constructor(plateNumber: string) {
+    super();
+    this.plateNumber = new PlateNumber(plateNumber);
+    this.location = undefined;
   }
 
   park(location: Location): void {
@@ -20,17 +17,24 @@ export class Vehicle extends Entity<PlateNumber> {
     this.doPark(location);
   }
 
-  makeSnapshot(): VehicleSnapshot {
-    return new VehicleSnapshot(this.id.value, this.currentLocation);
+  getPlateNumber(): PlateNumber {
+    return this.plateNumber.clone();
+  }
+
+  getLocation(): Location | undefined {
+    if (this.location === undefined) {
+      return undefined;
+    }
+    return this.location.clone();
   }
 
   private ensureVehicleIsNotAlreadyParkedAt(location: Location): void {
-    if (this.currentLocation && this.currentLocation.equals(location)) {
+    if (this.location && this.location.equals(location)) {
       throw new Error(`Vehicle is already parked at this location.`);
     }
   }
 
   private doPark(location: Location): void {
-    this.currentLocation = location;
+    this.location = location.clone();
   }
 }

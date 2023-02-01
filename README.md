@@ -1,16 +1,51 @@
+# Introduction
+
+This repository contains a technical test regarding my application at Fulll.
+
+Instructions for this test are available at [here](https://github.com/fulll/hiring/blob/master/Backend/ddd-and-cqrs-intermediare-senior.md).
+
+A design step is available in folder 'design'. You may use [Excalidraw](https://excalidraw.com/) to open `.excalidraw` files.
+
+# Setup
+
+```
+npm install
+```
+
+# Run tests
+
+## Run Cucumber tests
+
+```
+npm test
+```
+
+## Run only specific Cucumber tests
+
+Tag the Cucumber scenarios to run with '@only', then run:
+
+```
+npm run test:only
+```
+
 # DDD questions
 
-- Should Vehicle be an entity ?
 - Should Vehicle be isolated in a bounded context ?
 
-# Improvements
+# Technical questions
 
-- Simplify DTO (view) and Entity/VO data
-- Implement a better deep equal method (npm deep-equal ?)
-- Implement a generic clone method
+- How to access VO/Entities primitives ? (data persistence)
+- Should members be public readonly vs getters ?
+
+# Some possible improvements...
+
+- 'deepCopy' implementation
+- Add validation on Entity, ValueObject and RootAggregate
 - CI/CD
-- Add capabilities on Entity, ValueObject and RootAggregate (validate(), unique...)
-- Make Entity, ValueObject and RootAggregate "snapshotable" (using an interface, force implementation of method "serialize" & force add a static builder from a snapshot) => Split behavior and data on DDD objects and use interfaces to ease persistance & evolutions (OCP)
-- Typed errors
-- CommandBus & QueryBus to decouple handlers from controllers and/or allow future implementation of event sourcing
+- Implement a GUID generator for Identifier (npm uuid ?)
+- Make commands atomic: implement transactions
+- Pagination on Queries that return arrays (ListVehicles)
+- Implement a better deep equal method (npm deep-equal ?)
+- Implement typed errors
+- CommandBus & QueryBus for more abstraction & capabilities
 - Separate db if needed

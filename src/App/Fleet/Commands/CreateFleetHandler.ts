@@ -10,8 +10,15 @@ export class CreateFleetHandler implements CommandHandler<CreateFleet> {
     this.fleetRepository = fleetRepository;
   }
 
-  async execute(command: CreateFleet): Promise<void> {
-    const fleet: Fleet = Fleet.makeNewFleet(command.fleetId);
+  async handle(command: CreateFleet): Promise<void> {
+    await this.ensureFleetDoesNotAlreadyExist(command.userId);
+    const fleet: Fleet = Fleet.createNewFleet(command.userId);
     this.fleetRepository.saveFleet(fleet);
+  }
+
+  private async ensureFleetDoesNotAlreadyExist(userId: string) {
+    if (await this.fleetRepository.hasFleetForUserId(userId)) {
+      throw new Error(`Fleet already created.`);
+    }
   }
 }
