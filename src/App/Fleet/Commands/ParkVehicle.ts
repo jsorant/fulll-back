@@ -12,7 +12,7 @@ export class ParkVehicle implements Command {
     vehiclePlateNumber: string,
     locationLatitudeDegrees: number,
     locationLongitudeDegrees: number,
-    locationAltitudeMeters: number
+    locationAltitudeMeters?: number
   ) {
     this.fleetId = fleetId;
     this.vehiclePlateNumber = vehiclePlateNumber;

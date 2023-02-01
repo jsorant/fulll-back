@@ -2,7 +2,7 @@ import { RootAggregate } from "../DddModel/RootAggregate";
 import { Vehicle } from "./Entities/Vehicle";
 import { Location } from "./ValueObjects/Location";
 import { PlateNumber } from "./ValueObjects/PlateNumber";
-import { Identifier } from "../SharedKernel/Indentifier";
+import { Identifier } from "../SharedKernel/Identifier";
 
 export class Fleet extends RootAggregate {
   private readonly userId: Identifier;

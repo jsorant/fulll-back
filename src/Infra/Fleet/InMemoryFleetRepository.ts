@@ -1,17 +1,16 @@
 import { FleetRepository } from "../../App/Fleet/Commands/Ports/FleetRepository";
-import { ProjectionsBuilder } from "../../App/Fleet/Queries/Ports/ProjectionsBuilder";
+import { FleetProjections } from "../../App/Fleet/Queries/Ports/FleetProjections";
 import { VehiclesProjection } from "../../App/Fleet/Queries/Views/VehiclesProjection";
 import { LocationProjection } from "../../App/Fleet/Queries/Views/LocationProjection";
 import { Fleet } from "../../Domain/Fleet/Fleet";
-import { Identifier } from "../../Domain/SharedKernel/Indentifier";
+import { Identifier } from "../../Domain/SharedKernel/Identifier";
 import { FleetProjection } from "../../App/Fleet/Queries/Views/FleetProjection";
 import { Vehicle } from "../../Domain/Fleet/Entities/Vehicle";
 import { Location } from "../../Domain/Fleet/ValueObjects/Location";
 import { PlateNumber } from "../../Domain/Fleet/ValueObjects/PlateNumber";
-import { InMemoryProjectionAdapter } from "./InMemoryProjectionAdapter";
 
 export class InMemoryDataPersistence
-  implements FleetRepository, ProjectionsBuilder
+  implements FleetRepository, FleetProjections
 {
   private fleets: Array<Fleet> = [];
   private projectionAdapter: InMemoryProjectionAdapter =
@@ -34,19 +33,19 @@ export class InMemoryDataPersistence
 
   // ProjectionsPersistence implementations
 
-  async buildFleetProjectionForUser(userId: string): Promise<FleetProjection> {
+  async getFleetProjectionForUser(userId: string): Promise<FleetProjection> {
     const foundFleet: Fleet = this.findFleetFromUserIdOrThrow(userId);
     return this.projectionAdapter.adaptToFleetProjection(foundFleet);
   }
 
-  async buildVehiclesProjectionOfFleet(
+  async getVehiclesProjectionOfFleet(
     fleetId: string
   ): Promise<VehiclesProjection> {
     const foundFleet: Fleet = this.findFleetOrThrow(fleetId);
     return this.projectionAdapter.adaptToVehiclesProjection(foundFleet);
   }
 
-  async buildVehicleLocationProjection(
+  async getVehicleLocationProjection(
     fleetId: string,
     plateNumber: string
   ): Promise<LocationProjection> {
@@ -141,5 +140,30 @@ export class InMemoryDataPersistence
     }
 
     return location;
+  }
+}
+
+class InMemoryProjectionAdapter {
+  adaptToFleetProjection(fleet: Fleet): FleetProjection {
+    return {
+      id: fleet.getId(),
+      userId: fleet.getUserId(),
+    };
+  }
+
+  adaptToVehiclesProjection(fleet: Fleet): VehiclesProjection {
+    return {
+      vehiclePlateNumbers: fleet
+        .getVehicles()
+        .map((vehicle) => vehicle.getPlateNumber().value),
+    };
+  }
+
+  adaptToLocationProjection(location: Location): LocationProjection {
+    return {
+      latitudeDegrees: location.latitudeDegrees,
+      longitudeDegrees: location.longitudeDegrees,
+      altitudeMeters: location.altitudeMeters,
+    };
   }
 }

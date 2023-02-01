@@ -1,6 +1,6 @@
 import { PlateNumber as PlateNumber } from "../ValueObjects/PlateNumber";
 import { Location } from "../ValueObjects/Location";
-import { Entity } from "../../DddModel/entity";
+import { Entity } from "../../DddModel/Entity";
 
 export class Vehicle extends Entity {
   private readonly plateNumber: PlateNumber;

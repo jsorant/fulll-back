@@ -1,4 +1,4 @@
-import { Identifier, IdentifierGenerator } from "../SharedKernel/Indentifier";
+import { Identifier, IdentifierGenerator } from "../SharedKernel/Identifier";
 
 export abstract class Entity {
   private readonly id: Identifier;

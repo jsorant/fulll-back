@@ -8,8 +8,4 @@ export class PlateNumber extends ValueObject {
     this.value = value;
     Object.freeze(this);
   }
-
-  toString(): string {
-    return this.value;
-  }
 }

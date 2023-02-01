@@ -4,17 +4,18 @@ import { Given, When, Then, Before } from "@cucumber/cucumber";
 import { ParkVehicle } from "../../src/App/Fleet/Commands/ParkVehicle";
 import { ParkVehicleHandler } from "../../src/App/Fleet/Commands/ParkVehicleHandler";
 import { LocationProjection } from "../../src/App/Fleet/Queries/Views/LocationProjection";
-import { GetVehicleLocation } from "../../src/App/Fleet/Queries/GetVehicleLocation";
-import { GetVehicleLocationHandler } from "../../src/App/Fleet/Queries/GetVehicleLocationHandler";
+import { LocateVehicle } from "../../src/App/Fleet/Queries/LocateVehicle";
+import { LocateVehicleHandler } from "../../src/App/Fleet/Queries/LocateVehicleHandler";
 import { FleetRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
-import { ProjectionsBuilder } from "../../src/App/Fleet/Queries/Ports/ProjectionsBuilder";
+import { FleetProjections } from "../../src/App/Fleet/Queries/Ports/FleetProjections";
 import { assertIsAnErrorWithMessage } from "./TestTools";
 import { makeDataPersistence } from "./Dependencies";
 
 Before(async function () {
-  this.dataPersistence = makeDataPersistence();
+  const { fleetRepository, projectionsBuilder } = makeDataPersistence();
+  this.fleetRepository = fleetRepository;
+  this.projectionsBuilder = projectionsBuilder;
 });
-
 Given("a location", function () {
   this.locationLatitudeDegrees = 45;
   this.locationLongitudeDegrees = 100;
@@ -28,7 +29,7 @@ Given("my vehicle has been parked into this location", async function () {
     this.locationLatitudeDegrees,
     this.locationLongitudeDegrees,
     this.locationAltitudeMeters,
-    this.dataPersistence
+    this.fleetRepository
   );
 });
 
@@ -39,7 +40,7 @@ When("I park my vehicle at this location", async function () {
     this.locationLatitudeDegrees,
     this.locationLongitudeDegrees,
     this.locationAltitudeMeters,
-    this.dataPersistence
+    this.fleetRepository
   );
 });
 
@@ -51,7 +52,7 @@ When("I try to park my vehicle at this location", async function () {
       this.locationLatitudeDegrees,
       this.locationLongitudeDegrees,
       this.locationAltitudeMeters,
-      this.dataPersistence
+      this.fleetRepository
     );
   } catch (error: any) {
     this.lastError = error;
@@ -64,7 +65,7 @@ Then(
     const location: LocationProjection = await getVehicleLocation(
       this.myFleetId,
       this.vehiclePlateNumber,
-      this.dataPersistence
+      this.projectionsBuilder
     );
     const isExpectedLocation: boolean =
       location.latitudeDegrees === this.locationLatitudeDegrees &&
@@ -93,7 +94,7 @@ async function parkVehicle(
   locationLatitudeDegrees: number,
   locationLongitudeDegrees: number,
   locationAltitudeMeters: number,
-  dataPersistence: FleetRepository
+  fleetRepository: FleetRepository
 ): Promise<void> {
   const command: ParkVehicle = new ParkVehicle(
     fleetId,
@@ -102,21 +103,18 @@ async function parkVehicle(
     locationLongitudeDegrees,
     locationAltitudeMeters
   );
-  const handler: ParkVehicleHandler = new ParkVehicleHandler(dataPersistence);
+  const handler: ParkVehicleHandler = new ParkVehicleHandler(fleetRepository);
   await handler.handle(command);
 }
 
 async function getVehicleLocation(
   fleetId: string,
   vehiclePlateNumber: string,
-  dataPersistence: ProjectionsBuilder
+  projectionsBuilder: FleetProjections
 ): Promise<LocationProjection> {
-  const query: GetVehicleLocation = new GetVehicleLocation(
-    fleetId,
-    vehiclePlateNumber
-  );
-  const handler: GetVehicleLocationHandler = new GetVehicleLocationHandler(
-    dataPersistence
+  const query: LocateVehicle = new LocateVehicle(fleetId, vehiclePlateNumber);
+  const handler: LocateVehicleHandler = new LocateVehicleHandler(
+    projectionsBuilder
   );
   return await handler.handle(query);
 }

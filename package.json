@@ -11,6 +11,10 @@
   },
   "scripts": {
     "test": "cucumber-js ./tests/Features/ --profile default ",
-    "test:only": "cucumber-js ./tests/Features/ --profile default --tags \"@only\""
+    "test:only": "cucumber-js ./tests/Features/ --profile default --tags \"@only\"",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "commander": "^10.0.0"
   }
 }

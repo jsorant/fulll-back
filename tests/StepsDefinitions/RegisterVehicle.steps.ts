@@ -11,7 +11,9 @@ import { assertIsAnErrorWithMessage } from "./TestTools";
 import { makeDataPersistence } from "./Dependencies";
 
 Before(async function () {
-  this.dataPersistence = makeDataPersistence();
+  const { fleetRepository, projectionsBuilder } = makeDataPersistence();
+  this.fleetRepository = fleetRepository;
+  this.projectionsBuilder = projectionsBuilder;
 });
 
 Given("a vehicle", function () {
@@ -22,7 +24,7 @@ Given("I have registered this vehicle into my fleet", async function () {
   await registerVehicleInto(
     this.myFleetId,
     this.vehiclePlateNumber,
-    this.dataPersistence
+    this.fleetRepository
   );
 });
 
@@ -32,7 +34,7 @@ Given(
     await registerVehicleInto(
       this.anotherUserFleetId,
       this.vehiclePlateNumber,
-      this.dataPersistence
+      this.fleetRepository
     );
   }
 );
@@ -41,7 +43,7 @@ When("I register this vehicle into my fleet", async function () {
   await registerVehicleInto(
     this.myFleetId,
     this.vehiclePlateNumber,
-    this.dataPersistence
+    this.fleetRepository
   );
 });
 
@@ -50,7 +52,7 @@ When("I try to register this vehicle into my fleet", async function () {
     await registerVehicleInto(
       this.myFleetId,
       this.vehiclePlateNumber,
-      this.dataPersistence
+      this.fleetRepository
     );
   } catch (error: any) {
     this.lastError = error;
@@ -60,7 +62,7 @@ When("I try to register this vehicle into my fleet", async function () {
 Then("this vehicle should be part of my vehicle fleet", async function () {
   const query: ListVehicles = new ListVehicles(this.myFleetId);
   const handler: ListVehiclesHandler = new ListVehiclesHandler(
-    this.dataPersistence
+    this.projectionsBuilder
   );
   const registeredVehicles: VehiclesProjection = await handler.handle(query);
 
@@ -83,14 +85,14 @@ Then(
 async function registerVehicleInto(
   fleetId: string,
   vehiclePlateNumber: string,
-  dataPersistence: FleetRepository
+  fleetRepository: FleetRepository
 ): Promise<void> {
   const command: RegisterVehicle = new RegisterVehicle(
     vehiclePlateNumber,
     fleetId
   );
   const handler: RegisterVehicleHandler = new RegisterVehicleHandler(
-    dataPersistence
+    fleetRepository
   );
   await handler.handle(command);
 }

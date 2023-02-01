@@ -1,7 +1,17 @@
 import { FleetRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
-import { ProjectionsBuilder } from "../../src/App/Fleet/Queries/Ports/ProjectionsBuilder";
+import { FleetProjections } from "../../src/App/Fleet/Queries/Ports/FleetProjections";
 import { InMemoryDataPersistence } from "../../src/Infra/Fleet/InMemoryFleetRepository";
 
-export function makeDataPersistence(): FleetRepository & ProjectionsBuilder {
-  return new InMemoryDataPersistence();
+export interface DataPersistenceObjects {
+  fleetRepository: FleetRepository;
+  projectionsBuilder: FleetProjections;
+}
+
+export function makeDataPersistence(): DataPersistenceObjects {
+  const dataPersistence: InMemoryDataPersistence =
+    new InMemoryDataPersistence();
+  return {
+    fleetRepository: dataPersistence,
+    projectionsBuilder: dataPersistence,
+  };
 }

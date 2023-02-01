@@ -1,6 +1,6 @@
 import { Query } from "../../CqrsModel/Query";
 
-export class GetVehicleLocation implements Query {
+export class LocateVehicle implements Query {
   readonly fleetId: string;
   readonly plateNumber: string;
 
