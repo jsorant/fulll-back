@@ -3,7 +3,7 @@ import { InMemoryDataPersistence } from "../Fleet/InMemory/InMemoryDataPersisten
 import { Command } from "commander";
 import { MongoDBFleetRepository } from "../Fleet/MongoDB/MongoDBFleetRepository";
 import { MongoDBFleetProjections } from "../Fleet/MongoDB/MongoDBFleetProjections";
-import { MongoDBFleetAdapter } from "../Fleet/MongoDB/MongoDBFleetAdapter";
+import { MongoDBFleetAdapter } from "../Fleet/MongoDB/FleetRepositoryAdapter";
 
 (async () => {
   try {

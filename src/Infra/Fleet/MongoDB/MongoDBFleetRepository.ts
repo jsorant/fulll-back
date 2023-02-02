@@ -3,7 +3,7 @@ import { FleetRepository } from "../../../App/Fleet/Commands/Ports/FleetReposito
 import { Fleet } from "../../../Domain/Fleet/Fleet";
 import { Identifier } from "../../../Domain/SharedKernel/Identifier";
 import { FleetModel } from "./Documents/FleetDocument";
-import { MongoDBFleetAdapter } from "./MongoDBFleetAdapter";
+import { MongoDBFleetAdapter } from "./FleetRepositoryAdapter";
 
 export class MongoDBFleetRepository implements FleetRepository {
   private mongoUri: string;
@@ -25,7 +25,7 @@ export class MongoDBFleetRepository implements FleetRepository {
   async saveFleet(fleet: Fleet): Promise<void> {
     await connect(this.mongoUri);
 
-    const doc = new FleetModel(this.adapter.fromDomain(fleet));
+    const doc = new FleetModel(this.adapter.toMongo(fleet));
     await doc.save();
 
     await disconnect();

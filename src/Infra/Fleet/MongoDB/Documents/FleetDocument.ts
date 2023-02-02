@@ -12,4 +12,5 @@ const schema = new Schema<FleetInterface>({
   //vehicles: { type: Array<String>, required: true },
 });
 
-export const FleetModel = model<FleetInterface>("Fleet", schema);
+const FleetModel = model<FleetInterface>("Fleet", schema);
+export default FleetModel;
