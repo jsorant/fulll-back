@@ -18,6 +18,10 @@ export class Fleet extends RootAggregate {
     return new Fleet(userId, []);
   }
 
+  static createFleet(userId: Identifier, vehicles: Array<Vehicle>) {
+    return new Fleet(userId, vehicles);
+  }
+
   getUserId(): Identifier {
     return this.userId;
   }

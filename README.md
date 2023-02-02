@@ -39,6 +39,7 @@ npm run test:only
 
 # Some possible improvements...
 
+- Properly handle a global mongoose connection
 - 'deepCopy' implementation
 - Add validation on Entity, ValueObject and RootAggregate
 - CI/CD
@@ -49,3 +50,9 @@ npm run test:only
 - Implement typed errors
 - CommandBus & QueryBus for more abstraction & capabilities
 - Separate db if needed
+
+# Docker set up
+
+```
+Locally : docker run --name mongodb -d -p 27017:27017 mongo
+```

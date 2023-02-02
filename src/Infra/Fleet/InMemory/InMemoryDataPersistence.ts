@@ -1,13 +1,13 @@
-import { FleetRepository } from "../../App/Fleet/Commands/Ports/FleetRepository";
-import { FleetProjections } from "../../App/Fleet/Queries/Ports/FleetProjections";
-import { VehiclesProjection } from "../../App/Fleet/Queries/Views/VehiclesProjection";
-import { LocationProjection } from "../../App/Fleet/Queries/Views/LocationProjection";
-import { Fleet } from "../../Domain/Fleet/Fleet";
-import { Identifier } from "../../Domain/SharedKernel/Identifier";
-import { FleetProjection } from "../../App/Fleet/Queries/Views/FleetProjection";
-import { Vehicle } from "../../Domain/Fleet/Entities/Vehicle";
-import { Location } from "../../Domain/Fleet/ValueObjects/Location";
-import { PlateNumber } from "../../Domain/Fleet/ValueObjects/PlateNumber";
+import { FleetRepository } from "../../../App/Fleet/Commands/Ports/FleetRepository";
+import { FleetProjections } from "../../../App/Fleet/Queries/Ports/FleetProjections";
+import { VehiclesProjection } from "../../../App/Fleet/Queries/Views/VehiclesProjection";
+import { LocationProjection } from "../../../App/Fleet/Queries/Views/LocationProjection";
+import { Fleet } from "../../../Domain/Fleet/Fleet";
+import { Identifier } from "../../../Domain/SharedKernel/Identifier";
+import { FleetProjection } from "../../../App/Fleet/Queries/Views/FleetProjection";
+import { Vehicle } from "../../../Domain/Fleet/Entities/Vehicle";
+import { Location } from "../../../Domain/Fleet/ValueObjects/Location";
+import { PlateNumber } from "../../../Domain/Fleet/ValueObjects/PlateNumber";
 
 export class InMemoryDataPersistence
   implements FleetRepository, FleetProjections

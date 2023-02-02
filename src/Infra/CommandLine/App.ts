@@ -1,43 +1,45 @@
 import { FleetCommandLineController } from "./FleetCommandLineController";
-import { InMemoryDataPersistence } from "../Fleet/InMemoryFleetRepository";
+import { InMemoryDataPersistence } from "../Fleet/InMemory/InMemoryDataPersistence";
 import { Command } from "commander";
+import { MongoDBFleetRepository } from "../Fleet/MongoDB/MongoDBFleetRepository";
+import { MongoDBFleetProjections } from "../Fleet/MongoDB/MongoDBFleetProjections";
+import { MongoDBFleetAdapter } from "../Fleet/MongoDB/MongoDBFleetAdapter";
 
-const dataPersistence = new InMemoryDataPersistence();
-const controller = new FleetCommandLineController(
-  dataPersistence,
-  dataPersistence
-);
+(async () => {
+  try {
+    await main();
+  } catch (e) {
+    console.error(e);
+  } finally {
+  }
+})();
 
-const command: Command = new Command();
+async function main() {
+  const dataPersistence = new InMemoryDataPersistence();
+  const uri = "mongodb://localhost:27017/fulll-backend";
+  const adapter: MongoDBFleetAdapter = new MongoDBFleetAdapter();
+  const mongoDBFleetRepository = new MongoDBFleetRepository(uri, adapter);
+  const mongoDBFleetProjections = new MongoDBFleetProjections(uri);
+  const controller = new FleetCommandLineController(
+    mongoDBFleetRepository,
+    mongoDBFleetProjections
+  );
 
-function initialize() {
-  setupNameAndDescription();
-  setupCreateCommand();
-  setupRegisterVehicleCommand();
-  setupParkVehicleCommand();
-}
+  const command: Command = new Command();
 
-function setupNameAndDescription() {
   command
     .name("fleet")
     .description("An application to manage a fleet of vehicles.");
-}
 
-function setupCreateCommand() {
   command
     .command("create")
     .description("Create the fleet of an user and return its identifier.")
     .argument("<userId>", "Identifier of the user.")
-    .action(onCreateCommand);
-}
+    .action(async (userId: string) => {
+      const fleetId: string = await controller.createFleet(userId);
+      console.log(`Fleet created. Fleet id: '${fleetId}'`);
+    });
 
-async function onCreateCommand(userId: string): Promise<void> {
-  console.log(userId);
-  const fleetId: string = await controller.createFleet(userId);
-  console.log(fleetId);
-}
-
-function setupRegisterVehicleCommand() {
   command
     .command("register-vehicle")
     .description("Register a vehicle in a fleet.")
@@ -46,21 +48,10 @@ function setupRegisterVehicleCommand() {
       "<vehiclePlateNumber>",
       "Plate number of the vehicule to register."
     )
-    .action(onRegisterVehicleCommand);
-}
+    .action(async (fleetId: string, vehiclePlateNumber: string) => {
+      await controller.registerVehicle(fleetId, vehiclePlateNumber);
+    });
 
-async function onRegisterVehicleCommand(
-  fleetId: string,
-  vehiclePlateNumber: string
-): Promise<void> {
-  console.log(fleetId);
-  console.log(vehiclePlateNumber);
-  fleetId = await controller.createFleet("totoID");
-
-  await controller.registerVehicle(fleetId, vehiclePlateNumber);
-}
-
-function setupParkVehicleCommand() {
   command
     .command("park-vehicle")
     .description("Park a vehicle to a given location.")
@@ -72,35 +63,37 @@ function setupParkVehicleCommand() {
     .argument("<latitude>", "Latitude of the location.")
     .argument("<longitude>", "Longitude of the location.")
     .argument("[altitude]", "Altitude of the location.")
-    .action(onParkVehicleCommand);
+    .action(
+      async (
+        fleetId: string,
+        vehiclePlateNumber: string,
+        latitude: string,
+        longitude: string,
+        altitude: string
+      ) => {
+        console.log(fleetId);
+        console.log(vehiclePlateNumber);
+        console.log(latitude);
+        console.log(longitude);
+        console.log(altitude);
+        fleetId = await controller.createFleet("totoID");
+        await controller.registerVehicle(fleetId, vehiclePlateNumber);
+
+        await controller.parkVehicle(
+          fleetId,
+          vehiclePlateNumber,
+          latitude,
+          longitude,
+          altitude
+        );
+
+        const location = await controller.locateVehicle(
+          fleetId,
+          vehiclePlateNumber
+        );
+        console.log(location);
+      }
+    );
+
+  await command.parseAsync();
 }
-
-async function onParkVehicleCommand(
-  fleetId: string,
-  vehiclePlateNumber: string,
-  latitude: string,
-  longitude: string,
-  altitude: string
-): Promise<void> {
-  console.log(fleetId);
-  console.log(vehiclePlateNumber);
-  console.log(latitude);
-  console.log(longitude);
-  console.log(altitude);
-  fleetId = await controller.createFleet("totoID");
-  await controller.registerVehicle(fleetId, vehiclePlateNumber);
-
-  await controller.parkVehicle(
-    fleetId,
-    vehiclePlateNumber,
-    latitude,
-    longitude,
-    altitude
-  );
-
-  const location = await controller.locateVehicle(fleetId, vehiclePlateNumber);
-  console.log(location);
-}
-
-initialize();
-command.parse();

@@ -18,6 +18,6 @@ export class ParkVehicleHandler implements CommandHandler<ParkVehicle> {
       command.locationLongitudeDegrees,
       command.locationAltitudeMeters
     );
-    this.fleetRepository.saveFleet(fleet);
+    await this.fleetRepository.saveFleet(fleet);
   }
 }
