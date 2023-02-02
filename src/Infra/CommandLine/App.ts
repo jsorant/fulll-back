@@ -4,6 +4,7 @@ import { Command } from "commander";
 import { MongoDBFleetRepository } from "../Fleet/MongoDB/MongoDBFleetRepository";
 import { MongoDBFleetProjections } from "../Fleet/MongoDB/MongoDBFleetProjections";
 import { MongoDBFleetAdapter } from "../Fleet/MongoDB/FleetRepositoryAdapter";
+import { FleetProjectionsAdapter } from "../Fleet/MongoDB/FleetProjectionsAdapter";
 
 (async () => {
   try {
@@ -18,8 +19,9 @@ async function main() {
   const dataPersistence = new InMemoryDataPersistence();
   const uri = "mongodb://localhost:27017/fulll-backend";
   const adapter: MongoDBFleetAdapter = new MongoDBFleetAdapter();
+  const adapter2: FleetProjectionsAdapter = new FleetProjectionsAdapter();
   const mongoDBFleetRepository = new MongoDBFleetRepository(uri, adapter);
-  const mongoDBFleetProjections = new MongoDBFleetProjections(uri);
+  const mongoDBFleetProjections = new MongoDBFleetProjections(uri, adapter2);
   const controller = new FleetCommandLineController(
     mongoDBFleetRepository,
     mongoDBFleetProjections

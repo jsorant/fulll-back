@@ -1,7 +1,8 @@
+import { Identifier } from "../SharedKernel/Identifier";
 import { Entity } from "./Entity";
 
 export abstract class RootAggregate extends Entity {
-  constructor() {
-    super();
+  constructor(id?: Identifier) {
+    super(id);
   }
 }

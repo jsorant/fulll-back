@@ -1,12 +1,18 @@
-import { Fleet } from "../../../Domain/Fleet/Fleet";
-import { FleetInterface } from "./Documents/FleetDocument";
+import { FleetProjection } from "../../../App/Fleet/Queries/Views/FleetProjection";
+import { VehiclesProjection } from "../../../App/Fleet/Queries/Views/VehiclesProjection";
 
 export class FleetProjectionsAdapter {
-  fromMongo(fleet: Fleet): FleetInterface {
+  adaptFromMongo(fleet: any): FleetProjection {
     return {
-      id: fleet.getId(),
-      userId: fleet.getUserId(),
-      //avatar: 'https://i.imgur.com/dM7Thhn.png'
+      id: fleet.id,
+      userId: fleet.userId,
+    };
+  }
+
+  adaptVehiclesFromMongo(fleet: any): VehiclesProjection {
+    console.log(fleet);
+    return {
+      vehiclePlateNumbers: [],
     };
   }
 }

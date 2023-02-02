@@ -3,8 +3,12 @@ import { Identifier, IdentifierGenerator } from "../SharedKernel/Identifier";
 export abstract class Entity {
   private readonly id: Identifier;
 
-  constructor() {
-    this.id = IdentifierGenerator.generate();
+  constructor(id?: Identifier) {
+    if (id) {
+      this.id = id;
+    } else {
+      this.id = IdentifierGenerator.generate();
+    }
   }
 
   getId(): Identifier {

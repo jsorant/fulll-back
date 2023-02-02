@@ -1,16 +1,10 @@
-import { model, Schema } from "mongoose";
-
 export interface FleetInterface {
   id: string;
   userId: string;
-  //vehicles: Array<string>;
+  vehicles: Array<VehicleInterface>;
 }
 
-const schema = new Schema<FleetInterface>({
-  id: { type: String, required: true },
-  userId: { type: String, required: true },
-  //vehicles: { type: Array<String>, required: true },
-});
-
-const FleetModel = model<FleetInterface>("Fleet", schema);
-export default FleetModel;
+export interface VehicleInterface {
+  id: string;
+  plateNumber: string;
+}

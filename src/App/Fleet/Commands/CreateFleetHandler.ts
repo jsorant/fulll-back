@@ -14,17 +14,12 @@ export class CreateFleetHandler implements CommandHandler<CreateFleet> {
     await this.ensureFleetDoesNotAlreadyExist(command.userId);
     const fleet: Fleet = Fleet.createNewFleet(command.userId);
 
-    //TODO REMOVE
-    fleet.register("plate_1");
-    fleet.register("plate_2");
-    fleet.register("plate_3");
-
     await this.fleetRepository.saveFleet(fleet);
   }
 
   private async ensureFleetDoesNotAlreadyExist(userId: string) {
     if (await this.fleetRepository.hasFleetForUserId(userId)) {
-      throw new Error(`Fleet already created.`);
+      throw new Error(`Fleet already created for this user.`);
     }
   }
 }

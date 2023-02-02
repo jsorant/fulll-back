@@ -8,8 +8,12 @@ export class Fleet extends RootAggregate {
   private readonly userId: Identifier;
   private readonly vehicles: Array<Vehicle>;
 
-  private constructor(userId: Identifier, vehicles: Array<Vehicle>) {
-    super();
+  private constructor(
+    userId: Identifier,
+    vehicles: Array<Vehicle>,
+    id?: Identifier
+  ) {
+    super(id);
     this.userId = userId;
     this.vehicles = vehicles;
   }
@@ -18,8 +22,12 @@ export class Fleet extends RootAggregate {
     return new Fleet(userId, []);
   }
 
-  static createFleet(userId: Identifier, vehicles: Array<Vehicle>) {
-    return new Fleet(userId, vehicles);
+  static createFleet(
+    fleetId: Identifier,
+    userId: Identifier,
+    vehicles: Array<Vehicle>
+  ) {
+    return new Fleet(userId, vehicles, fleetId);
   }
 
   getUserId(): Identifier {
