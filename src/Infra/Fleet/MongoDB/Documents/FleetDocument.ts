@@ -7,4 +7,11 @@ export interface FleetInterface {
 export interface VehicleInterface {
   id: string;
   plateNumber: string;
+  location?: LocationInterface;
+}
+
+export interface LocationInterface {
+  latitudeDegrees: number;
+  longitudeDegrees: number;
+  altitudeMeters?: number;
 }

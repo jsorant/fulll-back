@@ -30,6 +30,7 @@ npm run test:only
 
 # DDD questions
 
+- Park vs localize: choose only one
 - Should Vehicle be isolated in a bounded context ?
 
 # Technical questions

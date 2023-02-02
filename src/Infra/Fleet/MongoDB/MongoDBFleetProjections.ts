@@ -1,10 +1,12 @@
 import { MongoClient } from "mongodb";
 import { connect, disconnect } from "mongoose";
+import { cpuUsage } from "process";
 import fleet from "../../../../fleet";
 import { FleetProjections } from "../../../App/Fleet/Queries/Ports/FleetProjections";
 import { FleetProjection } from "../../../App/Fleet/Queries/Views/FleetProjection";
 import { LocationProjection } from "../../../App/Fleet/Queries/Views/LocationProjection";
 import { VehiclesProjection } from "../../../App/Fleet/Queries/Views/VehiclesProjection";
+import { Vehicle } from "../../../Domain/Fleet/Entities/Vehicle";
 
 import { FleetProjectionsAdapter } from "./FleetProjectionsAdapter";
 
@@ -41,7 +43,7 @@ export class MongoDBFleetProjections implements FleetProjections {
     await this.client.connect();
     const collection = this.client.db(DBNAME).collection(COLLECTIONNAME);
 
-    const findResult = await collection.findOne({ fleetId });
+    const findResult = await collection.findOne({ id: fleetId });
 
     await this.client.close();
 
@@ -56,6 +58,31 @@ export class MongoDBFleetProjections implements FleetProjections {
     fleetId: string,
     plateNumber: string
   ): Promise<LocationProjection> {
-    throw new Error("Method not implemented.");
+    await this.client.connect();
+    const collection = this.client.db(DBNAME).collection(COLLECTIONNAME);
+
+    const findResult = await collection.findOne({ id: fleetId });
+
+    await this.client.close();
+
+    if (findResult === null) {
+      throw new Error("Fleet not found for id: " + fleetId);
+    }
+
+    const foundVehicle = (findResult.vehicles as Array<any>).find(
+      (vehicle) => vehicle.plateNumber == plateNumber
+    );
+
+    if (foundVehicle === undefined) {
+      throw new Error("Vehicle not found. Plate number: " + plateNumber);
+    }
+
+    if (foundVehicle.location === undefined) {
+      throw new Error(
+        "No location found for given vehicle. Plate number: " + plateNumber
+      );
+    }
+
+    return this.adapter.adaptLocationFromMongo(foundVehicle.location);
   }
 }

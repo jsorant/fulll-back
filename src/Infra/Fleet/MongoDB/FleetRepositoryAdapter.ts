@@ -1,6 +1,11 @@
 import { Vehicle } from "../../../Domain/Fleet/Entities/Vehicle";
 import { Fleet } from "../../../Domain/Fleet/Fleet";
-import { FleetInterface, VehicleInterface } from "./Documents/FleetDocument";
+import { Location } from "../../../Domain/Fleet/ValueObjects/Location";
+import {
+  FleetInterface,
+  LocationInterface,
+  VehicleInterface,
+} from "./Documents/FleetDocument";
 
 export class MongoDBFleetAdapter {
   adaptToMongo(fleet: Fleet): FleetInterface {
@@ -26,10 +31,23 @@ export class MongoDBFleetAdapter {
   }
 
   private adaptVehicleToMongo(vehicle: Vehicle): VehicleInterface {
-    return {
-      id: vehicle.getId(),
-      plateNumber: vehicle.getPlateNumber().value,
-    };
+    const location: Location | undefined = vehicle.getLocation();
+    if (location === undefined) {
+      return {
+        id: vehicle.getId(),
+        plateNumber: vehicle.getPlateNumber().value,
+      };
+    } else {
+      return {
+        id: vehicle.getId(),
+        plateNumber: vehicle.getPlateNumber().value,
+        location: {
+          latitudeDegrees: location.latitudeDegrees,
+          longitudeDegrees: location.longitudeDegrees,
+          altitudeMeters: location.altitudeMeters,
+        },
+      };
+    }
   }
 
   private adaptVehiclesFromMongo(vehicles: Array<any>): Array<Vehicle> {
@@ -37,6 +55,19 @@ export class MongoDBFleetAdapter {
   }
 
   private adaptVehicleFromMongo(vehicle: any): Vehicle {
-    return new Vehicle(vehicle.plateNumber, vehicle.id);
+    const location: any = vehicle.location;
+    if (location === undefined) {
+      return new Vehicle(vehicle.plateNumber, vehicle.id);
+    } else {
+      return new Vehicle(
+        vehicle.plateNumber,
+        vehicle.id,
+        new Location(
+          location.latitudeDegrees,
+          location.longitudeDegrees,
+          location.altitudeMeters
+        )
+      );
+    }
   }
 }

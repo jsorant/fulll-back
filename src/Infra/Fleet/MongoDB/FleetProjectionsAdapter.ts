@@ -1,4 +1,5 @@
 import { FleetProjection } from "../../../App/Fleet/Queries/Views/FleetProjection";
+import { LocationProjection } from "../../../App/Fleet/Queries/Views/LocationProjection";
 import { VehiclesProjection } from "../../../App/Fleet/Queries/Views/VehiclesProjection";
 
 export class FleetProjectionsAdapter {
@@ -13,6 +14,14 @@ export class FleetProjectionsAdapter {
     console.log(fleet);
     return {
       vehiclePlateNumbers: [],
+    };
+  }
+
+  adaptLocationFromMongo(location: any): LocationProjection {
+    return {
+      latitudeDegrees: location.latitudeDegrees,
+      longitudeDegrees: location.longitudeDegrees,
+      altitudeMeters: location.altitudeMeters,
     };
   }
 }

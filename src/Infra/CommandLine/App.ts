@@ -10,7 +10,11 @@ import { FleetProjectionsAdapter } from "../Fleet/MongoDB/FleetProjectionsAdapte
   try {
     await main();
   } catch (e) {
-    console.error(e);
+    if (e instanceof Error) {
+      console.error(`Error: ${(e as Error).message}`);
+    } else {
+      console.error(e);
+    }
   } finally {
   }
 })();
@@ -55,8 +59,8 @@ async function main() {
     });
 
   command
-    .command("park-vehicle")
-    .description("Park a vehicle to a given location.")
+    .command("localize-vehicle")
+    .description("Localize a vehicle to a given location.")
     .argument("<fleetId>", "Identifier of the fleet.")
     .argument(
       "<vehiclePlateNumber>",
@@ -73,14 +77,6 @@ async function main() {
         longitude: string,
         altitude: string
       ) => {
-        console.log(fleetId);
-        console.log(vehiclePlateNumber);
-        console.log(latitude);
-        console.log(longitude);
-        console.log(altitude);
-        fleetId = await controller.createFleet("totoID");
-        await controller.registerVehicle(fleetId, vehiclePlateNumber);
-
         await controller.parkVehicle(
           fleetId,
           vehiclePlateNumber,
@@ -89,6 +85,7 @@ async function main() {
           altitude
         );
 
+        // TODO add dedicated command
         const location = await controller.locateVehicle(
           fleetId,
           vehiclePlateNumber

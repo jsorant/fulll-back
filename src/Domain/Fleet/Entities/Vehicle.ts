@@ -7,10 +7,10 @@ export class Vehicle extends Entity {
   private readonly plateNumber: PlateNumber;
   private location: Location | undefined;
 
-  constructor(plateNumber: string, id?: Identifier) {
+  constructor(plateNumber: string, id?: Identifier, location?: Location) {
     super(id);
     this.plateNumber = new PlateNumber(plateNumber);
-    this.location = undefined;
+    this.location = location;
   }
 
   park(location: Location): void {
