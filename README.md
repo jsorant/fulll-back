@@ -40,12 +40,13 @@ npm run test:only
 
 # Some possible improvements...
 
+- Implement a GUID generator for Identifier (npm uuid ?)
+- Make public members on Array private and make un getter to return a copy (Fleet, Vehicle...)
+- 'deepCopy' implementation
 - Rename App/Fleet => App/FleetManagement,VehicleLocalization
 - Properly handle a global mongoose connection
-- 'deepCopy' implementation
 - Add validation on Entity, ValueObject and RootAggregate
 - CI/CD
-- Implement a GUID generator for Identifier (npm uuid ?)
 - Make commands atomic: implement transactions
 - Pagination on Queries that return arrays (ListVehicles)
 - Implement a better deep equal method (npm deep-equal ?)

@@ -6,17 +6,25 @@ import { ParkVehicleHandler } from "../../src/App/Fleet/Commands/ParkVehicleHand
 import { LocationProjection } from "../../src/App/Fleet/Queries/Views/LocationProjection";
 import { LocateVehicle } from "../../src/App/Fleet/Queries/LocateVehicle";
 import { LocateVehicleHandler } from "../../src/App/Fleet/Queries/LocateVehicleHandler";
-import { FleetsRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
-import { FleetProjections } from "../../src/App/Fleet/Queries/Ports/FleetProjections";
 import { assertIsAnErrorWithMessage } from "./TestTools";
-import { makeDataPersistence } from "./Dependencies";
+import { makeDataPersistence } from "./DataPersistence";
+import { VehiclesRepository } from "../../src/App/Fleet/Commands/Ports/VehiclesRepository";
+import { LocationProjections } from "../../src/App/Fleet/Queries/Ports/LocationProjections";
 
 Before(async function () {
-  const { fleetRepository, fleetProjections: projectionsBuilder } =
-    makeDataPersistence();
-  this.fleetRepository = fleetRepository;
-  this.projectionsBuilder = projectionsBuilder;
+  const {
+    fleetsRepository: fleetsRepository,
+    vehiclesRepository: vehiclesRepository,
+    fleetProjections: fleetProjections,
+    locationProjections: locationProjections,
+  } = makeDataPersistence();
+
+  this.fleetsRepository = fleetsRepository;
+  this.vehiclesRepository = vehiclesRepository;
+  this.fleetProjections = fleetProjections;
+  this.locationProjections = locationProjections;
 });
+
 Given("a location", function () {
   this.locationLatitudeDegrees = 45;
   this.locationLongitudeDegrees = 100;
@@ -30,7 +38,7 @@ Given("my vehicle has been parked into this location", async function () {
     this.locationLatitudeDegrees,
     this.locationLongitudeDegrees,
     this.locationAltitudeMeters,
-    this.fleetRepository
+    this.vehiclesRepository
   );
 });
 
@@ -41,7 +49,7 @@ When("I park my vehicle at this location", async function () {
     this.locationLatitudeDegrees,
     this.locationLongitudeDegrees,
     this.locationAltitudeMeters,
-    this.fleetRepository
+    this.vehiclesRepository
   );
 });
 
@@ -53,7 +61,7 @@ When("I try to park my vehicle at this location", async function () {
       this.locationLatitudeDegrees,
       this.locationLongitudeDegrees,
       this.locationAltitudeMeters,
-      this.fleetRepository
+      this.vehiclesRepository
     );
   } catch (error: any) {
     this.lastError = error;
@@ -66,7 +74,7 @@ Then(
     const location: LocationProjection = await getVehicleLocation(
       this.myFleetId,
       this.vehiclePlateNumber,
-      this.projectionsBuilder
+      this.locationProjections
     );
     const isExpectedLocation: boolean =
       location.latitudeDegrees === this.locationLatitudeDegrees &&
@@ -95,7 +103,7 @@ async function parkVehicle(
   locationLatitudeDegrees: number,
   locationLongitudeDegrees: number,
   locationAltitudeMeters: number,
-  fleetRepository: FleetsRepository
+  vehiclesRepository: VehiclesRepository
 ): Promise<void> {
   const command: ParkVehicle = new ParkVehicle(
     fleetId,
@@ -104,18 +112,20 @@ async function parkVehicle(
     locationLongitudeDegrees,
     locationAltitudeMeters
   );
-  const handler: ParkVehicleHandler = new ParkVehicleHandler(fleetRepository);
+  const handler: ParkVehicleHandler = new ParkVehicleHandler(
+    vehiclesRepository
+  );
   await handler.handle(command);
 }
 
 async function getVehicleLocation(
   fleetId: string,
   vehiclePlateNumber: string,
-  projectionsBuilder: FleetProjections
+  locationProjections: LocationProjections
 ): Promise<LocationProjection> {
   const query: LocateVehicle = new LocateVehicle(fleetId, vehiclePlateNumber);
   const handler: LocateVehicleHandler = new LocateVehicleHandler(
-    projectionsBuilder
+    locationProjections
   );
   return await handler.handle(query);
 }

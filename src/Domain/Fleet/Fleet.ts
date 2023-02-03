@@ -5,7 +5,7 @@ import { VehicleId } from "./ValueObjects/VehicleId";
 
 export class Fleet extends RootAggregate<FleetId> {
   public readonly userId: UserId;
-  public readonly vehicles: Array<VehicleId>; // TODO make private & create method to return a copy
+  public readonly vehicles: Array<VehicleId>;
 
   private constructor(id: FleetId, userId: UserId, vehicles: Array<VehicleId>) {
     super(id);
@@ -28,6 +28,6 @@ export class Fleet extends RootAggregate<FleetId> {
   addVehicle(vehicleId: string): void {
     const valueToAdd: VehicleId = VehicleId.createFrom(vehicleId);
     this.vehicles.push(valueToAdd);
-    //TODO business rule to validate here too ?? Use a Set ?
+    //TODO Should we validate the business rule 'cannot add the same vehicle twice' here too ?
   }
 }

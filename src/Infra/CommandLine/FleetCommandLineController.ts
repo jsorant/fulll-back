@@ -2,7 +2,7 @@ import { CreateFleet } from "../../App/Fleet/Commands/CreateFleet";
 import { CreateFleetHandler } from "../../App/Fleet/Commands/CreateFleetHandler";
 import { ParkVehicle } from "../../App/Fleet/Commands/ParkVehicle";
 import { ParkVehicleHandler } from "../../App/Fleet/Commands/ParkVehicleHandler";
-import { FleetsRepository } from "../../App/Fleet/Commands/Ports/FleetRepository";
+import { FleetsRepository } from "../../App/Fleet/Commands/Ports/FleetsRepository";
 import { RegisterVehicle } from "../../App/Fleet/Commands/RegisterVehicle";
 import { RegisterVehicleHandler } from "../../App/Fleet/Commands/RegisterVehicleHandler";
 import { GetFleet } from "../../App/Fleet/Queries/GetFleet";
@@ -14,14 +14,14 @@ import { FleetProjection } from "../../App/Fleet/Queries/Views/FleetProjection";
 import { LocationProjection } from "../../App/Fleet/Queries/Views/LocationProjection";
 
 export class FleetCommandLineController {
-  private fleetRepository: FleetsRepository;
+  private fleetsRepository: FleetsRepository;
   private fleetProjections: FleetProjections;
 
   constructor(
-    fleetRepository: FleetsRepository,
+    fleetsRepository: FleetsRepository,
     fleetProjections: FleetProjections
   ) {
-    this.fleetRepository = fleetRepository;
+    this.fleetsRepository = fleetsRepository;
     this.fleetProjections = fleetProjections;
   }
 
@@ -40,7 +40,7 @@ export class FleetCommandLineController {
       fleetId
     );
     const handler: RegisterVehicleHandler = new RegisterVehicleHandler(
-      this.fleetRepository
+      this.fleetsRepository
     );
     await handler.handle(command);
   }
@@ -62,7 +62,7 @@ export class FleetCommandLineController {
         : undefined
     );
     const handler: ParkVehicleHandler = new ParkVehicleHandler(
-      this.fleetRepository
+      this.fleetsRepository
     );
     await handler.handle(command);
   }
@@ -81,7 +81,7 @@ export class FleetCommandLineController {
   private async createFleetOfUser(userId: string): Promise<void> {
     const command: CreateFleet = new CreateFleet(userId);
     const handler: CreateFleetHandler = new CreateFleetHandler(
-      this.fleetRepository
+      this.fleetsRepository
     );
     await handler.handle(command);
   }

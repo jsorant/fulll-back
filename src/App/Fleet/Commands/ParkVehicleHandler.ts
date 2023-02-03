@@ -1,13 +1,13 @@
 import { Vehicle } from "../../../Domain/Vehicle/Vehicle";
 import { CommandHandler } from "../../CqrsModel/CommandHandler";
 import { ParkVehicle } from "./ParkVehicle";
-import { VehiclesRepository } from "./Ports/VehicleRepository";
+import { VehiclesRepository } from "./Ports/VehiclesRepository";
 
 export class ParkVehicleHandler implements CommandHandler<ParkVehicle> {
-  private vehicleRepository: VehiclesRepository;
+  private vehiclesRepository: VehiclesRepository;
 
-  constructor(vehicleRepository: VehiclesRepository) {
-    this.vehicleRepository = vehicleRepository;
+  constructor(vehiclesRepository: VehiclesRepository) {
+    this.vehiclesRepository = vehiclesRepository;
   }
 
   async handle(command: ParkVehicle): Promise<void> {
@@ -19,12 +19,12 @@ export class ParkVehicleHandler implements CommandHandler<ParkVehicle> {
       command.locationLongitudeDegrees,
       command.locationAltitudeMeters
     );
-    await this.vehicleRepository.save(vehicle);
+    await this.vehiclesRepository.save(vehicle);
   }
 
   private async getVehicleOrThrow(plateNumber: string): Promise<Vehicle> {
     let vehicle: Vehicle | undefined =
-      await this.vehicleRepository.getFromPlateNumber(plateNumber);
+      await this.vehiclesRepository.getFromPlateNumber(plateNumber);
     if (vehicle === undefined) {
       throw new Error(`No vehicle found with plate number ${plateNumber}`);
     }

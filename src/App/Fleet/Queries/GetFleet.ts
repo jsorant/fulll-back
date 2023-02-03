@@ -4,7 +4,7 @@ export class GetFleet implements Query {
   readonly fleetId?: string;
   readonly userId?: string;
 
-  constructor(fleetId?: string, userId?: string) {
+  private constructor(fleetId?: string, userId?: string) {
     this.fleetId = fleetId;
     this.userId = userId;
   }

@@ -1,5 +1,5 @@
 import { ValueObject } from "../../DddModel/ValueObject";
-import { IdentifierGenerator } from "../../SharedKernel/Identifier";
+import { UniqueIdentifierGenerator } from "../../SharedKernel/UniqueIdentifier";
 
 export class VehicleId extends ValueObject {
   public readonly value: string;
@@ -15,7 +15,7 @@ export class VehicleId extends ValueObject {
   }
 
   static createNew() {
-    const id: string = IdentifierGenerator.generate();
+    const id: string = UniqueIdentifierGenerator.generate();
     return new VehicleId(id);
   }
 }

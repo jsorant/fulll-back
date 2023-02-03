@@ -1,4 +1,4 @@
-export class IdentifierGenerator {
+export class UniqueIdentifierGenerator {
   private static count: number = 0;
 
   static generate(): string {

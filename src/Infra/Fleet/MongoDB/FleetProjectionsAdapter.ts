@@ -11,7 +11,6 @@ export class FleetProjectionsAdapter {
   }
 
   adaptVehiclesFromMongo(fleet: any): VehiclesProjection {
-    console.log(fleet);
     return {
       vehiclePlateNumbers: [],
     };

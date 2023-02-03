@@ -3,18 +3,26 @@ import { Given, When, Then, Before } from "@cucumber/cucumber";
 
 import { RegisterVehicle } from "../../src/App/Fleet/Commands/RegisterVehicle";
 import { RegisterVehicleHandler } from "../../src/App/Fleet/Commands/RegisterVehicleHandler";
-import { ListVehicles } from "../../src/App/Fleet/Queries/ListVehicles";
-import { ListVehiclesHandler } from "../../src/App/Fleet/Queries/ListVehiclesHandler";
-import { FleetsRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
-import { VehiclesProjection } from "../../src/App/Fleet/Queries/Views/VehiclesProjection";
+import { FleetsRepository } from "../../src/App/Fleet/Commands/Ports/FleetsRepository";
 import { assertIsAnErrorWithMessage } from "./TestTools";
-import { makeDataPersistence } from "./Dependencies";
+import { makeDataPersistence } from "./DataPersistence";
+import { GetFleet } from "../../src/App/Fleet/Queries/GetFleet";
+import { GetFleetHandler } from "../../src/App/Fleet/Queries/GetFleetHandler";
+import { FleetProjection } from "../../src/App/Fleet/Queries/Views/FleetProjection";
+import { VehiclesRepository } from "../../src/App/Fleet/Commands/Ports/VehiclesRepository";
 
 Before(async function () {
-  const { fleetRepository, fleetProjections: projectionsBuilder } =
-    makeDataPersistence();
-  this.fleetRepository = fleetRepository;
-  this.projectionsBuilder = projectionsBuilder;
+  const {
+    fleetsRepository: fleetsRepository,
+    vehiclesRepository: vehiclesRepository,
+    fleetProjections: fleetProjections,
+    locationProjections: locationProjections,
+  } = makeDataPersistence();
+
+  this.fleetsRepository = fleetsRepository;
+  this.vehiclesRepository = vehiclesRepository;
+  this.fleetProjections = fleetProjections;
+  this.locationProjections = locationProjections;
 });
 
 Given("a vehicle", function () {
@@ -25,7 +33,8 @@ Given("I have registered this vehicle into my fleet", async function () {
   await registerVehicleInto(
     this.myFleetId,
     this.vehiclePlateNumber,
-    this.fleetRepository
+    this.vehiclesRepository,
+    this.fleetsRepository
   );
 });
 
@@ -35,7 +44,8 @@ Given(
     await registerVehicleInto(
       this.anotherUserFleetId,
       this.vehiclePlateNumber,
-      this.fleetRepository
+      this.vehiclesRepository,
+      this.fleetsRepository
     );
   }
 );
@@ -44,7 +54,8 @@ When("I register this vehicle into my fleet", async function () {
   await registerVehicleInto(
     this.myFleetId,
     this.vehiclePlateNumber,
-    this.fleetRepository
+    this.vehiclesRepository,
+    this.fleetsRepository
   );
 });
 
@@ -53,7 +64,8 @@ When("I try to register this vehicle into my fleet", async function () {
     await registerVehicleInto(
       this.myFleetId,
       this.vehiclePlateNumber,
-      this.fleetRepository
+      this.vehiclesRepository,
+      this.fleetsRepository
     );
   } catch (error: any) {
     this.lastError = error;
@@ -61,14 +73,12 @@ When("I try to register this vehicle into my fleet", async function () {
 });
 
 Then("this vehicle should be part of my vehicle fleet", async function () {
-  const query: ListVehicles = new ListVehicles(this.myFleetId);
-  const handler: ListVehiclesHandler = new ListVehiclesHandler(
-    this.projectionsBuilder
-  );
-  const registeredVehicles: VehiclesProjection = await handler.handle(query);
+  const query: GetFleet = GetFleet.makeWithFleetId(this.myFleetId);
+  const handler: GetFleetHandler = new GetFleetHandler(this.fleetProjections);
+  const fleet: FleetProjection = await handler.handle(query);
 
   assert(
-    isVehicleRegistered(this.vehiclePlateNumber, registeredVehicles),
+    isVehicleRegisteredIntoFleet(this.vehiclePlateNumber, fleet),
     "The vehicle is not part of my vehicle fleet"
   );
 });
@@ -86,25 +96,27 @@ Then(
 async function registerVehicleInto(
   fleetId: string,
   vehiclePlateNumber: string,
-  fleetRepository: FleetsRepository
+  vehiclesRepository: VehiclesRepository,
+  fleetsRepository: FleetsRepository
 ): Promise<void> {
   const command: RegisterVehicle = new RegisterVehicle(
     vehiclePlateNumber,
     fleetId
   );
   const handler: RegisterVehicleHandler = new RegisterVehicleHandler(
-    fleetRepository
+    vehiclesRepository,
+    fleetsRepository
   );
   await handler.handle(command);
 }
 
-function isVehicleRegistered(
-  vehicleToCheckPlateNumber: string,
-  registeredVehicles: VehiclesProjection
+function isVehicleRegisteredIntoFleet(
+  vehiclePlateNumberToCheck: string,
+  fleet: FleetProjection
 ): boolean {
   return (
-    registeredVehicles.vehiclePlateNumbers.find(
-      (plateNumber) => plateNumber === vehicleToCheckPlateNumber
+    fleet.vehiclesPlateNumber.find(
+      (plateNumber) => plateNumber === vehiclePlateNumberToCheck
     ) !== undefined
   );
 }

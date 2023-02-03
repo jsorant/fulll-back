@@ -6,7 +6,7 @@ import { FleetId } from "./ValueObjects/FleetId";
 
 export class Vehicle extends RootAggregate<VehicleId> {
   public readonly plateNumber: PlateNumber;
-  public readonly fleets: Array<FleetId>; // TODO make private & create method to return a copy
+  public readonly fleets: Array<FleetId>;
   public location: Location | undefined;
 
   private constructor(
@@ -84,7 +84,7 @@ export class Vehicle extends RootAggregate<VehicleId> {
   private ensureFleetIsNotAlreadyRegistered(fleetId: FleetId): void {
     if (this.hasFleet(fleetId)) {
       throw new Error(
-        `Vehicle with plate number '${this.plateNumber.value}' has already been registered into fleet '${this.id.value}'.`
+        `Vehicle with plate number '${this.plateNumber.value}' has already been registered into fleet '${fleetId.value}'.`
       );
     }
   }

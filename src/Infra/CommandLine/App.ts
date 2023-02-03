@@ -1,5 +1,5 @@
 import { FleetCommandLineController } from "./FleetCommandLineController";
-import { InMemoryDataPersistence } from "../Fleet/InMemory/InMemoryDataPersistence";
+import { InMemoryDataPersistence } from "../Fleet/InMemory/InMemoryFleetProjections";
 import { Command } from "commander";
 import { MongoDBFleetRepository } from "../Fleet/MongoDB/MongoDBFleetRepository";
 import { MongoDBFleetProjections } from "../Fleet/MongoDB/MongoDBFleetProjections";

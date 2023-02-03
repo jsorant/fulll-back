@@ -12,7 +12,8 @@
   "scripts": {
     "test": "cucumber-js ./tests/Features/ --profile default ",
     "test:only": "cucumber-js ./tests/Features/ --profile default --tags \"@only\"",
-    "build": "tsc"
+    "build": "tsc",
+    "debug": "node --inspect=5858 --inspect-brk --nolazy ./node_modules/@cucumber/cucumber/bin/cucumber-js ./tests/Features/ -t '@only'"
   },
   "dependencies": {
     "commander": "^10.0.0",

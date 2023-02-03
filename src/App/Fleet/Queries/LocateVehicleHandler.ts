@@ -1,19 +1,19 @@
-import { FleetProjections } from "./Ports/FleetProjections";
 import { QueryHandler } from "../../CqrsModel/QueryHandler";
-import { LocateVehicle } from "./LocateVehicle";
 import { LocationProjection } from "./Views/LocationProjection";
+import { LocateVehicle } from "./LocateVehicle";
+import { LocationProjections } from "./Ports/LocationProjections";
 
 export class LocateVehicleHandler
   implements QueryHandler<LocateVehicle, LocationProjection>
 {
-  private fleetProjections: FleetProjections;
+  private locationProjections: LocationProjections;
 
-  constructor(fleetProjections: FleetProjections) {
-    this.fleetProjections = fleetProjections;
+  constructor(locationProjections: LocationProjections) {
+    this.locationProjections = locationProjections;
   }
 
   async handle(query: LocateVehicle): Promise<LocationProjection> {
-    return await this.fleetProjections.getVehicleLocation(
+    return await this.locationProjections.getVehicleLocation(
       query.fleetId,
       query.plateNumber
     );

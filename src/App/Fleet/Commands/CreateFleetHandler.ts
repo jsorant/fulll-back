@@ -1,25 +1,28 @@
 import { CommandHandler } from "../../CqrsModel/CommandHandler";
 import { Fleet } from "../../../Domain/Fleet/Fleet";
-import { FleetsRepository } from "./Ports/FleetRepository";
+import { FleetsRepository } from "./Ports/FleetsRepository";
 import { CreateFleet } from "./CreateFleet";
 
 export class CreateFleetHandler implements CommandHandler<CreateFleet> {
-  private fleetRepository: FleetsRepository;
+  private fleetsRepository: FleetsRepository;
 
-  constructor(fleetRepository: FleetsRepository) {
-    this.fleetRepository = fleetRepository;
+  constructor(fleetsRepository: FleetsRepository) {
+    this.fleetsRepository = fleetsRepository;
   }
 
   async handle(command: CreateFleet): Promise<void> {
-    await this.ensureFleetDoesNotAlreadyExist(command.userId); // Bonus TODO move into createNew with a Domain Service, domain should throw
+    // Business rule
+    // Can be moved into a Domain Service and wrapped into a Domain service
+    // Cf RegisterVehicleHandler.handle() comment
+    await this.ensureFleetDoesNotAlreadyExist(command.userId);
 
     const fleet: Fleet = Fleet.createNew(command.userId);
 
-    await this.fleetRepository.save(fleet);
+    await this.fleetsRepository.save(fleet);
   }
 
   private async ensureFleetDoesNotAlreadyExist(userId: string) {
-    if (await this.fleetRepository.hasForUserId(userId)) {
+    if (await this.fleetsRepository.hasForUserId(userId)) {
       throw new Error(`Fleet already created for this user.`);
     }
   }

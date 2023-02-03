@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
-import { FleetsRepository } from "../../../App/Fleet/Commands/Ports/FleetRepository";
+import { FleetsRepository } from "../../../App/Fleet/Commands/Ports/FleetsRepository";
 import { Fleet } from "../../../Domain/Fleet/Fleet";
-import { Identifier } from "../../../Domain/SharedKernel/Identifier";
+import { Identifier } from "../../../Domain/SharedKernel/UniqueIdentifier";
 import { MongoDBFleetAdapter } from "./FleetRepositoryAdapter";
 
 //TODO to consts file
