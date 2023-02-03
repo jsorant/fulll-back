@@ -69,7 +69,10 @@ Then("I should be able to identify my fleet", async function () {
 });
 
 Then("I should be informed that my fleet is already created", function () {
-  assertIsAnErrorWithMessage(this.lastError, `Fleet already created.`);
+  assertIsAnErrorWithMessage(
+    this.lastError,
+    `Fleet already created for this user.`
+  );
 });
 
 async function createFleetAndGetFleetId(
