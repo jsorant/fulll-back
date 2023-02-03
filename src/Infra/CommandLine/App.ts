@@ -52,7 +52,7 @@ async function main() {
     .argument("<fleetId>", "Identifier of the fleet.")
     .argument(
       "<vehiclePlateNumber>",
-      "Plate number of the vehicule to register."
+      "Plate number of the vehicle to register."
     )
     .action(async (fleetId: string, vehiclePlateNumber: string) => {
       await controller.registerVehicle(fleetId, vehiclePlateNumber);
@@ -64,7 +64,7 @@ async function main() {
     .argument("<fleetId>", "Identifier of the fleet.")
     .argument(
       "<vehiclePlateNumber>",
-      "Plate number of the vehicule to register."
+      "Plate number of the vehiule to register."
     )
     .argument("<latitude>", "Latitude of the location.")
     .argument("<longitude>", "Longitude of the location.")

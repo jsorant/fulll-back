@@ -18,15 +18,15 @@ export class InMemoryDataPersistence
 
   // FleetRepository implementations
 
-  async hasFleetForUserId(userId: Identifier): Promise<boolean> {
+  async hasForUserId(userId: Identifier): Promise<boolean> {
     return this.findFleetFromUserId(userId) !== undefined;
   }
 
-  async getFleet(id: Identifier): Promise<Fleet> {
+  async get(id: Identifier): Promise<Fleet> {
     return this.findFleetOrThrow(id);
   }
 
-  async saveFleet(fleet: Fleet): Promise<void> {
+  async save(fleet: Fleet): Promise<void> {
     this.removeFleet(fleet.getId());
     this.addFleet(fleet);
   }

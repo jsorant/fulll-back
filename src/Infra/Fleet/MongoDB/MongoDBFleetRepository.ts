@@ -17,7 +17,7 @@ export class MongoDBFleetRepository implements FleetRepository {
     this.adapter = adapter;
   }
 
-  async hasFleetForUserId(userId: Identifier): Promise<boolean> {
+  async hasForUserId(userId: Identifier): Promise<boolean> {
     await this.client.connect();
     const collection = this.client.db(DBNAME).collection(COLLECTIONNAME);
 
@@ -28,7 +28,7 @@ export class MongoDBFleetRepository implements FleetRepository {
     return findResult !== null;
   }
 
-  async getFleet(id: Identifier): Promise<Fleet> {
+  async get(id: Identifier): Promise<Fleet> {
     await this.client.connect();
     const collection = this.client.db(DBNAME).collection(COLLECTIONNAME);
 
@@ -43,7 +43,7 @@ export class MongoDBFleetRepository implements FleetRepository {
     return this.adapter.adaptFromMongo(findResult);
   }
 
-  async saveFleet(fleet: Fleet): Promise<void> {
+  async save(fleet: Fleet): Promise<void> {
     await this.client.connect();
     const collection = this.client.db(DBNAME).collection(COLLECTIONNAME);
 

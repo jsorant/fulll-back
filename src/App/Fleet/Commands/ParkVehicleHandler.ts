@@ -1,23 +1,33 @@
-import { Fleet } from "../../../Domain/Fleet/Fleet";
+import { Vehicle } from "../../../Domain/Vehicle/Vehicle";
 import { CommandHandler } from "../../CqrsModel/CommandHandler";
 import { ParkVehicle } from "./ParkVehicle";
-import { FleetRepository } from "./Ports/FleetRepository";
+import { VehicleRepository } from "./Ports/VehicleRepository";
 
 export class ParkVehicleHandler implements CommandHandler<ParkVehicle> {
-  private fleetRepository: FleetRepository;
+  private vehicleRepository: VehicleRepository;
 
-  constructor(fleetRepository: FleetRepository) {
-    this.fleetRepository = fleetRepository;
+  constructor(vehicleRepository: VehicleRepository) {
+    this.vehicleRepository = vehicleRepository;
   }
 
   async handle(command: ParkVehicle): Promise<void> {
-    const fleet: Fleet = await this.fleetRepository.getFleet(command.fleetId);
-    fleet.parkVehicle(
-      command.vehiclePlateNumber,
+    const vehicle: Vehicle = await this.getVehicleOrThrow(
+      command.vehiclePlateNumber
+    );
+    vehicle.park(
       command.locationLatitudeDegrees,
       command.locationLongitudeDegrees,
       command.locationAltitudeMeters
     );
-    await this.fleetRepository.saveFleet(fleet);
+    await this.vehicleRepository.save(vehicle);
+  }
+
+  private async getVehicleOrThrow(plateNumber: string): Promise<Vehicle> {
+    let vehicle: Vehicle | undefined =
+      await this.vehicleRepository.getFromPlateNumber(plateNumber);
+    if (vehicle === undefined) {
+      throw new Error(`No vehicle found with plate number ${plateNumber}`);
+    }
+    return vehicle;
   }
 }
