@@ -6,14 +6,14 @@ import { LocationProjection } from "./Views/LocationProjection";
 export class LocateVehicleHandler
   implements QueryHandler<LocateVehicle, LocationProjection>
 {
-  private projectionsPersistence: FleetProjections;
+  private fleetProjections: FleetProjections;
 
-  constructor(projectionsPersistence: FleetProjections) {
-    this.projectionsPersistence = projectionsPersistence;
+  constructor(fleetProjections: FleetProjections) {
+    this.fleetProjections = fleetProjections;
   }
 
   async handle(query: LocateVehicle): Promise<LocationProjection> {
-    return await this.projectionsPersistence.getVehicleLocationProjection(
+    return await this.fleetProjections.getVehicleLocation(
       query.fleetId,
       query.plateNumber
     );

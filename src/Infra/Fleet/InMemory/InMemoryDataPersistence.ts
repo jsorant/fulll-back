@@ -33,7 +33,7 @@ export class InMemoryDataPersistence
 
   // ProjectionsPersistence implementations
 
-  async getFleetProjectionForUser(userId: string): Promise<FleetProjection> {
+  async getFleetForUser(userId: string): Promise<FleetProjection> {
     const foundFleet: Fleet = this.findFleetFromUserIdOrThrow(userId);
     return this.projectionAdapter.adaptToFleetProjection(foundFleet);
   }
@@ -45,7 +45,7 @@ export class InMemoryDataPersistence
     return this.projectionAdapter.adaptToVehiclesProjection(foundFleet);
   }
 
-  async getVehicleLocationProjection(
+  async getVehicleLocation(
     fleetId: string,
     plateNumber: string
   ): Promise<LocationProjection> {

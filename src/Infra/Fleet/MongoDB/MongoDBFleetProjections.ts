@@ -22,7 +22,7 @@ export class MongoDBFleetProjections implements FleetProjections {
     this.adapter = adapter;
   }
 
-  async getFleetProjectionForUser(userId: string): Promise<FleetProjection> {
+  async getFleetForUser(userId: string): Promise<FleetProjection> {
     await this.client.connect();
     const collection = this.client.db(DBNAME).collection(COLLECTIONNAME);
 
@@ -54,7 +54,7 @@ export class MongoDBFleetProjections implements FleetProjections {
     return this.adapter.adaptVehiclesFromMongo(findResult);
   }
 
-  async getVehicleLocationProjection(
+  async getVehicleLocation(
     fleetId: string,
     plateNumber: string
   ): Promise<LocationProjection> {
