@@ -1,21 +1,11 @@
-import { Identifier, IdentifierGenerator } from "../SharedKernel/Identifier";
+export abstract class Entity<TId> {
+  public readonly id: TId;
 
-export abstract class Entity {
-  private readonly id: Identifier;
-
-  constructor(id?: Identifier) {
-    if (id) {
-      this.id = id;
-    } else {
-      this.id = IdentifierGenerator.generate();
-    }
+  constructor(id: TId) {
+    this.id = id;
   }
 
-  getId(): Identifier {
-    return this.id;
-  }
-
-  equals(other: Entity): boolean {
+  equals(other: Entity<TId>): boolean {
     return this.id === other.id;
   }
 }

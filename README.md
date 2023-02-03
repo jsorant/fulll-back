@@ -40,6 +40,7 @@ npm run test:only
 
 # Some possible improvements...
 
+- Rename App/Fleet => App/FleetManagement,VehicleLocalization
 - Properly handle a global mongoose connection
 - 'deepCopy' implementation
 - Add validation on Entity, ValueObject and RootAggregate

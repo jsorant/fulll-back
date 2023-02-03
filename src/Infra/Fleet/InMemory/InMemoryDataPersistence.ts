@@ -12,7 +12,7 @@ import { PlateNumber } from "../../../Domain/Fleet/ValueObjects/PlateNumber";
 export class InMemoryDataPersistence
   implements FleetRepository, FleetProjections
 {
-  private fleets: Array<Fleet> = [];
+  private static fleets: Array<Fleet> = [];
   private projectionAdapter: InMemoryProjectionAdapter =
     new InMemoryProjectionAdapter();
 

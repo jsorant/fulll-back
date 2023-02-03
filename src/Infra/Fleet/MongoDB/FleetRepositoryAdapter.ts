@@ -17,7 +17,7 @@ export class MongoDBFleetAdapter {
   }
 
   adaptFromMongo(object: any): Fleet {
-    return Fleet.createFleet(
+    return Fleet.createFrom(
       object.id,
       object.userId,
       this.adaptVehiclesFromMongo(object.vehicles)

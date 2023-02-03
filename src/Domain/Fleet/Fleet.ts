@@ -1,96 +1,33 @@
 import { RootAggregate } from "../DddModel/RootAggregate";
-import { Vehicle } from "./Entities/Vehicle";
-import { Location } from "./ValueObjects/Location";
-import { PlateNumber } from "./ValueObjects/PlateNumber";
-import { Identifier } from "../SharedKernel/Identifier";
+import { FleetId } from "./ValueObjects/FleetId";
+import { UserId } from "./ValueObjects/UserId";
+import { VehicleId } from "./ValueObjects/VehicleId";
 
-export class Fleet extends RootAggregate {
-  private readonly userId: Identifier;
-  private readonly vehicles: Array<Vehicle>;
+export class Fleet extends RootAggregate<FleetId> {
+  public readonly userId: UserId;
+  public readonly vehicles: Array<VehicleId>; // TODO make private & create method to return a copy
 
-  private constructor(
-    userId: Identifier,
-    vehicles: Array<Vehicle>,
-    id?: Identifier
-  ) {
+  private constructor(id: FleetId, userId: UserId, vehicles: Array<VehicleId>) {
     super(id);
     this.userId = userId;
     this.vehicles = vehicles;
   }
 
-  static createNewFleet(userId: Identifier) {
-    return new Fleet(userId, []);
+  static createNew(userId: string) {
+    return new Fleet(FleetId.createNew(), new UserId(userId), []);
   }
 
-  static createFleet(
-    fleetId: Identifier,
-    userId: Identifier,
-    vehicles: Array<Vehicle>
-  ) {
-    return new Fleet(userId, vehicles, fleetId);
-  }
-
-  getUserId(): Identifier {
-    return this.userId;
-  }
-
-  getVehicles(): Array<Vehicle> {
-    return this.vehicles;
-  }
-
-  register(vehiclePlateNumber: string): void {
-    this.ensureVehicleIsNotAlreadyRegistered(vehiclePlateNumber);
-    this.registerNewVehicle(vehiclePlateNumber);
-  }
-
-  parkVehicle(
-    vehiclePlateNumber: string,
-    latitudeDegrees: number,
-    longitudeDegrees: number,
-    altitudeMeters?: number
-  ): void {
-    const location: Location = new Location(
-      latitudeDegrees,
-      longitudeDegrees,
-      altitudeMeters
-    );
-    const vehicle: Vehicle = this.findVehicleOrThrow(vehiclePlateNumber);
-    vehicle.park(location);
-  }
-
-  private ensureVehicleIsNotAlreadyRegistered(plateNumber: string): void {
-    if (this.isRegistered(plateNumber)) {
-      throw new Error(
-        `Vehicle with plate number '${plateNumber}' has already been registered into fleet '${this.getId()}'.`
-      );
-    }
-  }
-
-  private isRegistered(plateNumber: string): boolean {
-    return this.findVehicle(plateNumber) !== undefined;
-  }
-
-  private findVehicleOrThrow(plateNumber: string): Vehicle {
-    const vehicle: Vehicle | undefined = this.findVehicle(plateNumber);
-    if (vehicle === undefined) {
-      throw new Error(
-        `Vehicle with plate number '${plateNumber}' is not registered into fleet '${this.getId()}'.`
-      );
-    }
-    return vehicle;
-  }
-
-  private findVehicle(vehiclePlateNumber: string): Vehicle | undefined {
-    const vehiclePlateNumberToSeek: PlateNumber = new PlateNumber(
-      vehiclePlateNumber
-    );
-    return this.vehicles.find((vehicle) =>
-      vehicle.getPlateNumber().equals(vehiclePlateNumberToSeek)
+  static createFrom(fleetId: string, userId: string, vehicles: Array<string>) {
+    return new Fleet(
+      FleetId.createFrom(fleetId),
+      new UserId(userId),
+      vehicles.map(VehicleId.createFrom)
     );
   }
 
-  private registerNewVehicle(vehiclePlateNumber: string): void {
-    const vehicle: Vehicle = new Vehicle(vehiclePlateNumber);
-    this.vehicles.push(vehicle);
+  addVehicle(vehicleId: string): void {
+    const valueToAdd: VehicleId = VehicleId.createFrom(vehicleId);
+    this.vehicles.push(valueToAdd);
+    //TODO business rule to validate here too ?? Use a Set ?
   }
 }
