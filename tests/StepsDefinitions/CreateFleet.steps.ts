@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Given, When, Then, Before } from "@cucumber/cucumber";
 
-import { FleetRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
+import { FleetsRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
 import { FleetProjections } from "../../src/App/Fleet/Queries/Ports/FleetProjections";
 import { FleetProjection } from "../../src/App/Fleet/Queries/Views/FleetProjection";
 import { CreateFleet } from "../../src/App/Fleet/Commands/CreateFleet";
@@ -12,7 +12,8 @@ import { assertIsAnErrorWithMessage } from "./TestTools";
 import { makeDataPersistence } from "./Dependencies";
 
 Before(async function () {
-  const { fleetRepository, projectionsBuilder } = makeDataPersistence();
+  const { fleetRepository, fleetProjections: projectionsBuilder } =
+    makeDataPersistence();
   this.fleetRepository = fleetRepository;
   this.projectionsBuilder = projectionsBuilder;
 });
@@ -77,7 +78,7 @@ Then("I should be informed that my fleet is already created", function () {
 
 async function createFleetAndGetFleetId(
   userId: string,
-  fleetRepository: FleetRepository,
+  fleetRepository: FleetsRepository,
   projectionsBuilder: FleetProjections
 ): Promise<string> {
   await createFleet(userId, fleetRepository);
@@ -85,7 +86,7 @@ async function createFleetAndGetFleetId(
   return fleet.id;
 }
 
-async function createFleet(userId: string, fleetRepository: FleetRepository) {
+async function createFleet(userId: string, fleetRepository: FleetsRepository) {
   const command: CreateFleet = new CreateFleet(userId);
   const handler: CreateFleetHandler = new CreateFleetHandler(fleetRepository);
   await handler.handle(command);

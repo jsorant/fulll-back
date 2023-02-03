@@ -5,13 +5,14 @@ import { RegisterVehicle } from "../../src/App/Fleet/Commands/RegisterVehicle";
 import { RegisterVehicleHandler } from "../../src/App/Fleet/Commands/RegisterVehicleHandler";
 import { ListVehicles } from "../../src/App/Fleet/Queries/ListVehicles";
 import { ListVehiclesHandler } from "../../src/App/Fleet/Queries/ListVehiclesHandler";
-import { FleetRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
+import { FleetsRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
 import { VehiclesProjection } from "../../src/App/Fleet/Queries/Views/VehiclesProjection";
 import { assertIsAnErrorWithMessage } from "./TestTools";
 import { makeDataPersistence } from "./Dependencies";
 
 Before(async function () {
-  const { fleetRepository, projectionsBuilder } = makeDataPersistence();
+  const { fleetRepository, fleetProjections: projectionsBuilder } =
+    makeDataPersistence();
   this.fleetRepository = fleetRepository;
   this.projectionsBuilder = projectionsBuilder;
 });
@@ -85,7 +86,7 @@ Then(
 async function registerVehicleInto(
   fleetId: string,
   vehiclePlateNumber: string,
-  fleetRepository: FleetRepository
+  fleetRepository: FleetsRepository
 ): Promise<void> {
   const command: RegisterVehicle = new RegisterVehicle(
     vehiclePlateNumber,

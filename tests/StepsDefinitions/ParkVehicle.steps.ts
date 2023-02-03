@@ -6,13 +6,14 @@ import { ParkVehicleHandler } from "../../src/App/Fleet/Commands/ParkVehicleHand
 import { LocationProjection } from "../../src/App/Fleet/Queries/Views/LocationProjection";
 import { LocateVehicle } from "../../src/App/Fleet/Queries/LocateVehicle";
 import { LocateVehicleHandler } from "../../src/App/Fleet/Queries/LocateVehicleHandler";
-import { FleetRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
+import { FleetsRepository } from "../../src/App/Fleet/Commands/Ports/FleetRepository";
 import { FleetProjections } from "../../src/App/Fleet/Queries/Ports/FleetProjections";
 import { assertIsAnErrorWithMessage } from "./TestTools";
 import { makeDataPersistence } from "./Dependencies";
 
 Before(async function () {
-  const { fleetRepository, projectionsBuilder } = makeDataPersistence();
+  const { fleetRepository, fleetProjections: projectionsBuilder } =
+    makeDataPersistence();
   this.fleetRepository = fleetRepository;
   this.projectionsBuilder = projectionsBuilder;
 });
@@ -94,7 +95,7 @@ async function parkVehicle(
   locationLatitudeDegrees: number,
   locationLongitudeDegrees: number,
   locationAltitudeMeters: number,
-  fleetRepository: FleetRepository
+  fleetRepository: FleetsRepository
 ): Promise<void> {
   const command: ParkVehicle = new ParkVehicle(
     fleetId,

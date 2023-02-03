@@ -1,85 +1,18 @@
-import { FleetRepository } from "../../../App/Fleet/Commands/Ports/FleetRepository";
+import { FleetsRepository } from "../../../App/Fleet/Commands/Ports/FleetRepository";
 import { FleetProjections } from "../../../App/Fleet/Queries/Ports/FleetProjections";
-import { VehiclesProjection } from "../../../App/Fleet/Queries/Views/VehiclesProjection";
 import { LocationProjection } from "../../../App/Fleet/Queries/Views/LocationProjection";
 import { Fleet } from "../../../Domain/Fleet/Fleet";
-import { Identifier } from "../../../Domain/SharedKernel/Identifier";
 import { FleetProjection } from "../../../App/Fleet/Queries/Views/FleetProjection";
-import { Vehicle } from "../../../Domain/Fleet/Entities/Vehicle";
-import { Location } from "../../../Domain/Fleet/ValueObjects/Location";
-import { PlateNumber } from "../../../Domain/Fleet/ValueObjects/PlateNumber";
+import { Vehicle } from "../../../Domain/Vehicle/Vehicle";
+import { Location } from "../../../Domain/Vehicle/ValueObjects/Location";
+import { VehiclesRepository } from "../../../App/Fleet/Commands/Ports/VehicleRepository";
+import { VehicleId } from "../../../Domain/Fleet/ValueObjects/VehicleId";
 
-export class InMemoryDataPersistence
-  implements FleetRepository, FleetProjections
-{
-  private static fleets: Array<Fleet> = [];
-  private projectionAdapter: InMemoryProjectionAdapter =
-    new InMemoryProjectionAdapter();
+class SharedMemory {
+  public static fleets: Array<Fleet> = [];
+  public static vehicles: Array<Vehicle> = [];
 
-  // FleetRepository implementations
-
-  async hasForUserId(userId: Identifier): Promise<boolean> {
-    return this.findFleetFromUserId(userId) !== undefined;
-  }
-
-  async get(id: Identifier): Promise<Fleet> {
-    return this.findFleetOrThrow(id);
-  }
-
-  async save(fleet: Fleet): Promise<void> {
-    this.removeFleet(fleet.getId());
-    this.addFleet(fleet);
-  }
-
-  // ProjectionsPersistence implementations
-
-  async getFleetForUser(userId: string): Promise<FleetProjection> {
-    const foundFleet: Fleet = this.findFleetFromUserIdOrThrow(userId);
-    return this.projectionAdapter.adaptToFleetProjection(foundFleet);
-  }
-
-  async getVehiclesProjectionOfFleet(
-    fleetId: string
-  ): Promise<VehiclesProjection> {
-    const foundFleet: Fleet = this.findFleetOrThrow(fleetId);
-    return this.projectionAdapter.adaptToVehiclesProjection(foundFleet);
-  }
-
-  async getVehicleLocation(
-    fleetId: string,
-    plateNumber: string
-  ): Promise<LocationProjection> {
-    const location: Location = this.findLocationOrThrow(fleetId, plateNumber);
-    return this.projectionAdapter.adaptToLocationProjection(location);
-  }
-
-  // Private methods
-
-  private removeFleet(fleetId: Identifier): void {
-    this.fleets = this.fleets.filter(
-      (fleet: Fleet) => fleet.getId() !== fleetId
-    );
-  }
-
-  private addFleet(fleet: Fleet) {
-    this.fleets.push(fleet);
-  }
-
-  private findFleetOrThrow(id: Identifier): Fleet {
-    const foundFleet: Fleet | undefined = this.findFleet(id);
-
-    if (foundFleet === undefined) {
-      throw new Error("Fleet not found for id: " + id);
-    }
-
-    return foundFleet;
-  }
-
-  private findFleet(id: Identifier): Fleet | undefined {
-    return this.fleets.find((fleet) => fleet.getId() === id);
-  }
-
-  private findFleetFromUserIdOrThrow(userId: Identifier): Fleet {
+  findFleetFromUserIdOrThrow(userId: string): Fleet {
     const foundFleet: Fleet | undefined = this.findFleetFromUserId(userId);
 
     if (foundFleet === undefined) {
@@ -89,53 +22,90 @@ export class InMemoryDataPersistence
     return foundFleet;
   }
 
-  private findFleetFromUserId(userId: Identifier): Fleet | undefined {
-    return this.fleets.find((fleet) => fleet.getUserId() === userId);
+  findFleetFromUserId(userId: string): Fleet | undefined {
+    return SharedMemory.fleets.find((fleet) => fleet.userId.value === userId);
   }
 
-  private findLocationOrThrow(fleetId: string, plateNumber: string): Location {
-    const vehicle: Vehicle = this.findVehicleOrThrow(fleetId, plateNumber);
-    return this.findLocationFromVehicleOrThrow(vehicle);
+  findFleetOrThrow(id: string): Fleet {
+    const foundFleet: Fleet | undefined = this.findFleet(id);
+
+    if (foundFleet === undefined) {
+      throw new Error("Fleet not found for id: " + id);
+    }
+
+    return foundFleet;
   }
 
-  private findVehicleOrThrow(fleetId: string, plateNumber: string): Vehicle {
-    const fleet: Fleet = this.findFleetOrThrow(fleetId);
-    return this.findVehicleFromFleetOrThrow(fleet, plateNumber);
+  findFleet(id: string): Fleet | undefined {
+    return SharedMemory.fleets.find((fleet) => fleet.id.value === id);
   }
 
-  private findVehicleFromFleetOrThrow(
-    fleet: Fleet,
-    plateNumber: string
-  ): Vehicle {
-    const foundVehicle: Vehicle | undefined = this.findVehicleFromFleet(
-      fleet,
-      plateNumber
+  removeFleet(id: string): void {
+    SharedMemory.fleets = SharedMemory.fleets.filter(
+      (fleet: Fleet) => fleet.id.value !== id
     );
+  }
+
+  addFleet(fleet: Fleet) {
+    SharedMemory.fleets.push(fleet);
+  }
+
+  findVehicleFromPlateNumberOrThrow(plateNumber: string): Vehicle {
+    const foundVehicle: Vehicle | undefined =
+      this.findVehicleFromPlateNumber(plateNumber);
 
     if (foundVehicle === undefined) {
-      throw new Error("Vehicle not found. Plate number: " + plateNumber);
+      throw new Error("Vehicle not found for plate number: " + plateNumber);
     }
 
     return foundVehicle;
   }
 
-  private findVehicleFromFleet(
-    fleet: Fleet,
-    plateNumber: string
-  ): Vehicle | undefined {
-    const plateNumberToSeek: PlateNumber = new PlateNumber(plateNumber);
-    return fleet
-      .getVehicles()
-      .find((vehicle) => vehicle.getPlateNumber().equals(plateNumberToSeek));
+  findVehicleOrThrow(id: string): Vehicle {
+    const foundVehicle: Vehicle | undefined = this.findVehicle(id);
+
+    if (foundVehicle === undefined) {
+      throw new Error("Vehicle not found for id: " + id);
+    }
+
+    return foundVehicle;
   }
 
-  private findLocationFromVehicleOrThrow(vehicle: Vehicle): Location {
-    const location: Location | undefined = vehicle.getLocation();
+  findVehicle(id: string): Vehicle | undefined {
+    return SharedMemory.vehicles.find((vehicle) => vehicle.id.value === id);
+  }
+
+  findVehicleFromPlateNumber(plateNumber: string): Vehicle | undefined {
+    return SharedMemory.vehicles.find(
+      (vehicle) => vehicle.plateNumber.value === plateNumber
+    );
+  }
+
+  removeVehicle(id: string) {
+    SharedMemory.vehicles = SharedMemory.vehicles.filter(
+      (vehicle: Vehicle) => vehicle.id.value !== id
+    );
+  }
+
+  addVehicle(vehicle: Vehicle) {
+    SharedMemory.vehicles.push(vehicle);
+  }
+
+  //
+
+  findLocationOrThrow(plateNumber: string): Location {
+    const vehicle: Vehicle =
+      this.findVehicleFromPlateNumberOrThrow(plateNumber);
+    return this.findLocationFromVehicleOrThrow(vehicle);
+  }
+
+  findLocationFromVehicleOrThrow(vehicle: Vehicle): Location {
+    const location: Location | undefined = vehicle.location;
 
     if (location === undefined) {
       throw new Error(
         "No location found for given vehicle. Plate number: " +
-          vehicle.getPlateNumber()
+          vehicle.plateNumber.value
       );
     }
 
@@ -143,20 +113,87 @@ export class InMemoryDataPersistence
   }
 }
 
-class InMemoryProjectionAdapter {
-  adaptToFleetProjection(fleet: Fleet): FleetProjection {
+export class InMemoryFleetsRepository implements FleetsRepository {
+  private sharedMemory: SharedMemory;
+
+  constructor(sharedMemory: SharedMemory) {
+    this.sharedMemory = sharedMemory;
+  }
+
+  async hasForUserId(userId: string): Promise<boolean> {
+    return this.sharedMemory.findFleetFromUserId(userId) !== undefined;
+  }
+
+  async get(id: string): Promise<Fleet> {
+    return this.sharedMemory.findFleetOrThrow(id);
+  }
+
+  async save(fleet: Fleet): Promise<void> {
+    this.sharedMemory.removeFleet(fleet.id.value);
+    this.sharedMemory.addFleet(fleet);
+  }
+}
+
+export class InMemoryVehiclesRepository implements VehiclesRepository {
+  private sharedMemory: SharedMemory;
+
+  constructor(sharedMemory: SharedMemory) {
+    this.sharedMemory = sharedMemory;
+  }
+
+  async getFromPlateNumber(plateNumber: string): Promise<Vehicle> {
+    return this.sharedMemory.findVehicleFromPlateNumberOrThrow(plateNumber);
+  }
+
+  async get(id: string): Promise<Vehicle> {
+    return this.sharedMemory.findVehicleOrThrow(id);
+  }
+
+  async save(vehicle: Vehicle): Promise<void> {
+    this.sharedMemory.removeVehicle(vehicle.id.value);
+    this.sharedMemory.addVehicle(vehicle);
+  }
+}
+
+export class InMemoryFleetProjections implements FleetProjections {
+  private sharedMemory: SharedMemory;
+
+  constructor(sharedMemory: SharedMemory) {
+    this.sharedMemory = sharedMemory;
+  }
+
+  async getFleetForUser(userId: string): Promise<FleetProjection> {
+    const fleet: Fleet = this.sharedMemory.findFleetFromUserIdOrThrow(userId);
+    return this.adaptToFleetProjection(fleet);
+  }
+
+  async getFleet(fleetId: string): Promise<FleetProjection> {
+    const foundFleet: Fleet = this.sharedMemory.findFleetOrThrow(fleetId);
+    return this.adaptToFleetProjection(foundFleet);
+  }
+
+  async getVehicleLocation(
+    fleetId: string,
+    plateNumber: string
+  ): Promise<LocationProjection> {
+    const location: Location =
+      this.sharedMemory.findLocationOrThrow(plateNumber);
+    return this.adaptToLocationProjection(location);
+  }
+
+  private adaptToFleetProjection(fleet: Fleet): FleetProjection {
     return {
-      id: fleet.getId(),
-      userId: fleet.getUserId(),
+      id: fleet.id.value,
+      userId: fleet.userId.value,
+      vehiclesPlateNumber: fleet.vehicles.map(this.getVehiclePlateNumber),
     };
   }
 
-  adaptToVehiclesProjection(fleet: Fleet): VehiclesProjection {
-    return {
-      vehiclePlateNumbers: fleet
-        .getVehicles()
-        .map((vehicle) => vehicle.getPlateNumber().value),
-    };
+  private getVehiclePlateNumber(vehicleId: VehicleId): string {
+    const vehicle: Vehicle = this.sharedMemory.findVehicleOrThrow(
+      vehicleId.value
+    );
+    return vehicle.plateNumber.value;
   }
 
   adaptToLocationProjection(location: Location): LocationProjection {

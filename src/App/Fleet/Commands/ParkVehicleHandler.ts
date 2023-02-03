@@ -1,12 +1,12 @@
 import { Vehicle } from "../../../Domain/Vehicle/Vehicle";
 import { CommandHandler } from "../../CqrsModel/CommandHandler";
 import { ParkVehicle } from "./ParkVehicle";
-import { VehicleRepository } from "./Ports/VehicleRepository";
+import { VehiclesRepository } from "./Ports/VehicleRepository";
 
 export class ParkVehicleHandler implements CommandHandler<ParkVehicle> {
-  private vehicleRepository: VehicleRepository;
+  private vehicleRepository: VehiclesRepository;
 
-  constructor(vehicleRepository: VehicleRepository) {
+  constructor(vehicleRepository: VehiclesRepository) {
     this.vehicleRepository = vehicleRepository;
   }
 

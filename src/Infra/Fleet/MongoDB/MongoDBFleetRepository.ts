@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { FleetRepository } from "../../../App/Fleet/Commands/Ports/FleetRepository";
+import { FleetsRepository } from "../../../App/Fleet/Commands/Ports/FleetRepository";
 import { Fleet } from "../../../Domain/Fleet/Fleet";
 import { Identifier } from "../../../Domain/SharedKernel/Identifier";
 import { MongoDBFleetAdapter } from "./FleetRepositoryAdapter";
@@ -8,7 +8,7 @@ import { MongoDBFleetAdapter } from "./FleetRepositoryAdapter";
 const DBNAME: string = "fulll-backend";
 const COLLECTIONNAME: string = "fleets";
 
-export class MongoDBFleetRepository implements FleetRepository {
+export class MongoDBFleetRepository implements FleetsRepository {
   private adapter: MongoDBFleetAdapter;
   private client: MongoClient;
 

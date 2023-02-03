@@ -2,7 +2,7 @@ import { CreateFleet } from "../../App/Fleet/Commands/CreateFleet";
 import { CreateFleetHandler } from "../../App/Fleet/Commands/CreateFleetHandler";
 import { ParkVehicle } from "../../App/Fleet/Commands/ParkVehicle";
 import { ParkVehicleHandler } from "../../App/Fleet/Commands/ParkVehicleHandler";
-import { FleetRepository } from "../../App/Fleet/Commands/Ports/FleetRepository";
+import { FleetsRepository } from "../../App/Fleet/Commands/Ports/FleetRepository";
 import { RegisterVehicle } from "../../App/Fleet/Commands/RegisterVehicle";
 import { RegisterVehicleHandler } from "../../App/Fleet/Commands/RegisterVehicleHandler";
 import { GetFleet } from "../../App/Fleet/Queries/GetFleet";
@@ -14,11 +14,11 @@ import { FleetProjection } from "../../App/Fleet/Queries/Views/FleetProjection";
 import { LocationProjection } from "../../App/Fleet/Queries/Views/LocationProjection";
 
 export class FleetCommandLineController {
-  private fleetRepository: FleetRepository;
+  private fleetRepository: FleetsRepository;
   private fleetProjections: FleetProjections;
 
   constructor(
-    fleetRepository: FleetRepository,
+    fleetRepository: FleetsRepository,
     fleetProjections: FleetProjections
   ) {
     this.fleetRepository = fleetRepository;

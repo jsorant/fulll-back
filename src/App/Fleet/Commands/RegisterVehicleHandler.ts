@@ -1,17 +1,17 @@
 import { Fleet } from "../../../Domain/Fleet/Fleet";
 import { Vehicle } from "../../../Domain/Vehicle/Vehicle";
 import { CommandHandler } from "../../CqrsModel/CommandHandler";
-import { FleetRepository } from "./Ports/FleetRepository";
-import { VehicleRepository } from "./Ports/VehicleRepository";
+import { FleetsRepository } from "./Ports/FleetRepository";
+import { VehiclesRepository } from "./Ports/VehicleRepository";
 import { RegisterVehicle } from "./RegisterVehicle";
 
 export class RegisterVehicleHandler implements CommandHandler<RegisterVehicle> {
-  private vehicleRepository: VehicleRepository;
-  private fleetRepository: FleetRepository;
+  private vehicleRepository: VehiclesRepository;
+  private fleetRepository: FleetsRepository;
 
   constructor(
-    vehicleRepository: VehicleRepository,
-    fleetRepository: FleetRepository
+    vehicleRepository: VehiclesRepository,
+    fleetRepository: FleetsRepository
   ) {
     this.fleetRepository = fleetRepository;
     this.vehicleRepository = vehicleRepository;

@@ -1,12 +1,12 @@
 import { CommandHandler } from "../../CqrsModel/CommandHandler";
 import { Fleet } from "../../../Domain/Fleet/Fleet";
-import { FleetRepository } from "./Ports/FleetRepository";
+import { FleetsRepository } from "./Ports/FleetRepository";
 import { CreateFleet } from "./CreateFleet";
 
 export class CreateFleetHandler implements CommandHandler<CreateFleet> {
-  private fleetRepository: FleetRepository;
+  private fleetRepository: FleetsRepository;
 
-  constructor(fleetRepository: FleetRepository) {
+  constructor(fleetRepository: FleetsRepository) {
     this.fleetRepository = fleetRepository;
   }
 
