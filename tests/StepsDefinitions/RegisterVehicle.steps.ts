@@ -88,7 +88,7 @@ Then(
   function () {
     assertIsAnErrorWithMessage(
       this.lastError,
-      `Vehicle with plate number '${this.vehiclePlateNumber}' has already been registered into fleet '${this.myFleetId}'.`
+      "Vehicle has already been registered."
     );
   }
 );

@@ -25,9 +25,23 @@ export class Fleet extends RootAggregate<FleetId> {
     );
   }
 
-  addVehicle(vehicleId: string): void {
-    const valueToAdd: VehicleId = VehicleId.createFrom(vehicleId);
-    this.vehicles.push(valueToAdd);
-    //TODO Should we validate the business rule 'cannot add the same vehicle twice' here too ?
+  assignVehicle(id: string): void {
+    const vehicleId: VehicleId = VehicleId.createFrom(id);
+    this.ensureVehicleIsNotAlreadyRegistered(vehicleId);
+    this.vehicles.push(vehicleId);
+  }
+
+  private ensureVehicleIsNotAlreadyRegistered(vehicleId: VehicleId): void {
+    if (this.hasVehicle(vehicleId)) {
+      throw new Error(`Vehicle has already been registered.`);
+    }
+  }
+
+  private hasVehicle(vehicleId: VehicleId): boolean {
+    return (
+      this.vehicles.find((currentVehicleId) =>
+        currentVehicleId.equals(vehicleId)
+      ) !== undefined
+    );
   }
 }

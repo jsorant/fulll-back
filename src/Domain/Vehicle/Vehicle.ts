@@ -61,10 +61,10 @@ export class Vehicle extends RootAggregate<VehicleId> {
     }
   }
 
-  registerToFleet(fleetId: string): void {
-    const fleetToAdd: FleetId = FleetId.createFrom(fleetId);
-    this.ensureFleetIsNotAlreadyRegistered(fleetToAdd);
-    this.addFleet(fleetToAdd);
+  registerToFleet(id: string): void {
+    const fleetId: FleetId = FleetId.createFrom(id);
+    this.ensureFleetIsNotAlreadyRegistered(fleetId);
+    this.addFleet(fleetId);
   }
 
   park(
@@ -83,9 +83,7 @@ export class Vehicle extends RootAggregate<VehicleId> {
 
   private ensureFleetIsNotAlreadyRegistered(fleetId: FleetId): void {
     if (this.hasFleet(fleetId)) {
-      throw new Error(
-        `Vehicle with plate number '${this.plateNumber.value}' has already been registered into fleet '${fleetId.value}'.`
-      );
+      throw new Error(`Vehicle has already been registered.`);
     }
   }
 
