@@ -36,6 +36,9 @@ npm link
 
 ```
 ./fleet --help
+./fleet create <userId> # returns fleetId on the standard output
+./fleet register-vehicle <fleetId> <vehiclePlateNumber>
+./fleet localize-vehicle <fleetId> <vehiclePlateNumber> lat lng [alt]
 ```
 
 # DDD questions

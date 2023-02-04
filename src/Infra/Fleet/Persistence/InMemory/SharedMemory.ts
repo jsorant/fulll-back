@@ -1,6 +1,6 @@
-import { Fleet } from "../../../Domain/Fleet/Fleet";
-import { Vehicle } from "../../../Domain/Vehicle/Vehicle";
-import { Location } from "../../../Domain/Vehicle/ValueObjects/Location";
+import { Fleet } from "../../../../Domain/Fleet/Fleet";
+import { Vehicle } from "../../../../Domain/Vehicle/Vehicle";
+import { Location } from "../../../../Domain/Vehicle/ValueObjects/Location";
 
 export class SharedMemory {
   // Use static to keep objects alive during the process runtime.

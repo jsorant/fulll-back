@@ -1,7 +1,7 @@
 import { SharedMemory } from "./SharedMemory";
-import { LocationProjections } from "../../../App/Fleet/Queries/Ports/LocationProjections";
-import { LocationProjection } from "../../../App/Fleet/Queries/Views/LocationProjection";
-import { Location } from "../../../Domain/Vehicle/ValueObjects/Location";
+import { LocationProjections } from "../../../../App/Fleet/Queries/Ports/LocationProjections";
+import { LocationProjection } from "../../../../App/Fleet/Queries/Views/LocationProjection";
+import { Location } from "../../../../Domain/Vehicle/ValueObjects/Location";
 
 export class InMemoryLocationProjections implements LocationProjections {
   private sharedMemory: SharedMemory;
