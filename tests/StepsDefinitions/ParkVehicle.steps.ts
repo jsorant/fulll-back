@@ -9,11 +9,11 @@ import { LocateVehicleHandler } from "../../src/App/Fleet/Queries/LocateVehicleH
 import { assertIsAnErrorWithMessage } from "./TestTools";
 import { VehiclesRepository } from "../../src/App/Fleet/Commands/Ports/VehiclesRepository";
 import { LocationProjections } from "../../src/App/Fleet/Queries/Ports/LocationProjections";
-import { makePersistence } from "./DataPersistence";
+import { makePersistence } from "./Persistence";
 import { Persistence } from "../../src/Infra/Fleet/Persistence/Persistence";
 
 Before(async function () {
-  const persistence: Persistence = makePersistence();
+  const persistence: Persistence = await makePersistence();
   this.fleetsRepository = persistence.getFleetsRepository();
   this.vehiclesRepository = persistence.getVehiclesRepository();
   this.fleetProjections = persistence.getFleetProjections();

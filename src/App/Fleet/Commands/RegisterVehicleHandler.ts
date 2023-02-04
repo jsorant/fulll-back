@@ -51,7 +51,7 @@ export class RegisterVehicleHandler
   }
 
   private async persistData(vehicle: Vehicle, fleet: Fleet): Promise<void> {
-    this.fleetsRepository.save(fleet);
-    this.vehiclesRepository.save(vehicle);
+    await this.fleetsRepository.save(fleet);
+    await this.vehiclesRepository.save(vehicle);
   }
 }

@@ -6,6 +6,11 @@ export class SharedMemory {
   private fleets: Array<Fleet> = [];
   private vehicles: Array<Vehicle> = [];
 
+  reset() {
+    this.fleets = [];
+    this.vehicles = [];
+  }
+
   // Helpers:
 
   findFleetFromUserIdOrThrow(userId: string): Fleet {

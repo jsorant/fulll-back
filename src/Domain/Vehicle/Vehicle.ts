@@ -21,7 +21,7 @@ export class Vehicle extends RootAggregate<VehicleId> {
     this.location = location;
   }
 
-  static createNew(plateNumber: string) {
+  static createNew(plateNumber: string): Vehicle {
     return new Vehicle(VehicleId.createNew(), new PlateNumber(plateNumber), []);
   }
 
@@ -32,8 +32,8 @@ export class Vehicle extends RootAggregate<VehicleId> {
     locationLatitudeDegrees?: number,
     locationLongitudeDegrees?: number,
     locationAltitudeMeters?: number
-  ) {
-    new Vehicle(
+  ): Vehicle {
+    return new Vehicle(
       VehicleId.createFrom(id),
       new PlateNumber(plateNumber),
       fleets.map(FleetId.createFrom),

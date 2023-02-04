@@ -12,6 +12,10 @@ import { SharedMemory } from "./SharedMemory";
 export class InMemoryPersistence implements Persistence {
   private sharedMemory: SharedMemory = new SharedMemory();
 
+  async reset(): Promise<void> {
+    this.sharedMemory.reset();
+  }
+
   getFleetsRepository(): FleetsRepository {
     return new InMemoryFleetsRepository(this.sharedMemory);
   }

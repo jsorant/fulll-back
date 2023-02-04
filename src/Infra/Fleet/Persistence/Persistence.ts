@@ -4,6 +4,7 @@ import { FleetProjections } from "../../../App/Fleet/Queries/Ports/FleetProjecti
 import { LocationProjections } from "../../../App/Fleet/Queries/Ports/LocationProjections";
 
 export interface Persistence {
+  reset(): Promise<void>;
   getFleetsRepository(): FleetsRepository;
   getVehiclesRepository(): VehiclesRepository;
   getFleetProjections(): FleetProjections;
