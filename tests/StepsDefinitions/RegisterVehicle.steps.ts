@@ -5,24 +5,19 @@ import { RegisterVehicle } from "../../src/App/Fleet/Commands/RegisterVehicle";
 import { RegisterVehicleHandler } from "../../src/App/Fleet/Commands/RegisterVehicleHandler";
 import { FleetsRepository } from "../../src/App/Fleet/Commands/Ports/FleetsRepository";
 import { assertIsAnErrorWithMessage } from "./TestTools";
-import { makeDataPersistence } from "./DataPersistence";
 import { GetFleet } from "../../src/App/Fleet/Queries/GetFleet";
 import { GetFleetHandler } from "../../src/App/Fleet/Queries/GetFleetHandler";
 import { FleetProjection } from "../../src/App/Fleet/Queries/Views/FleetProjection";
 import { VehiclesRepository } from "../../src/App/Fleet/Commands/Ports/VehiclesRepository";
+import { makePersistence } from "./DataPersistence";
+import { Persistence } from "../../src/Infra/Fleet/Persistence/Persistence";
 
 Before(async function () {
-  const {
-    fleetsRepository: fleetsRepository,
-    vehiclesRepository: vehiclesRepository,
-    fleetProjections: fleetProjections,
-    locationProjections: locationProjections,
-  } = makeDataPersistence();
-
-  this.fleetsRepository = fleetsRepository;
-  this.vehiclesRepository = vehiclesRepository;
-  this.fleetProjections = fleetProjections;
-  this.locationProjections = locationProjections;
+  const persistence: Persistence = makePersistence();
+  this.fleetsRepository = persistence.getFleetsRepository();
+  this.vehiclesRepository = persistence.getVehiclesRepository();
+  this.fleetProjections = persistence.getFleetProjections();
+  this.locationProjections = persistence.getLocationProjections();
 });
 
 Given("a vehicle", function () {

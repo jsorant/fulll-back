@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { FleetController } from "../../../App/Fleet/FleetController";
+import { FleetController } from "../FleetController";
 
 //TODO errors handler
 //TODO locate vehicle

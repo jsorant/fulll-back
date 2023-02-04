@@ -3,14 +3,8 @@ import { Vehicle } from "../../../../Domain/Vehicle/Vehicle";
 import { Location } from "../../../../Domain/Vehicle/ValueObjects/Location";
 
 export class SharedMemory {
-  // Use static to keep objects alive during the process runtime.
-  public static fleets: Array<Fleet> = [];
-  public static vehicles: Array<Vehicle> = [];
-
-  static reset(): void {
-    SharedMemory.fleets = [];
-    SharedMemory.vehicles = [];
-  }
+  private fleets: Array<Fleet> = [];
+  private vehicles: Array<Vehicle> = [];
 
   // Helpers:
 
@@ -25,7 +19,7 @@ export class SharedMemory {
   }
 
   findFleetFromUserId(userId: string): Fleet | undefined {
-    return SharedMemory.fleets.find((fleet) => fleet.userId.value === userId);
+    return this.fleets.find((fleet) => fleet.userId.value === userId);
   }
 
   findFleetOrThrow(id: string): Fleet {
@@ -39,17 +33,15 @@ export class SharedMemory {
   }
 
   findFleet(id: string): Fleet | undefined {
-    return SharedMemory.fleets.find((fleet) => fleet.id.value === id);
+    return this.fleets.find((fleet) => fleet.id.value === id);
   }
 
   removeFleet(id: string): void {
-    SharedMemory.fleets = SharedMemory.fleets.filter(
-      (fleet: Fleet) => fleet.id.value !== id
-    );
+    this.fleets = this.fleets.filter((fleet: Fleet) => fleet.id.value !== id);
   }
 
   addFleet(fleet: Fleet) {
-    SharedMemory.fleets.push(fleet);
+    this.fleets.push(fleet);
   }
 
   findVehicleFromPlateNumberOrThrow(plateNumber: string): Vehicle {
@@ -74,23 +66,23 @@ export class SharedMemory {
   }
 
   findVehicle(id: string): Vehicle | undefined {
-    return SharedMemory.vehicles.find((vehicle) => vehicle.id.value === id);
+    return this.vehicles.find((vehicle) => vehicle.id.value === id);
   }
 
   findVehicleFromPlateNumber(plateNumber: string): Vehicle | undefined {
-    return SharedMemory.vehicles.find(
+    return this.vehicles.find(
       (vehicle) => vehicle.plateNumber.value === plateNumber
     );
   }
 
   removeVehicle(id: string) {
-    SharedMemory.vehicles = SharedMemory.vehicles.filter(
+    this.vehicles = this.vehicles.filter(
       (vehicle: Vehicle) => vehicle.id.value !== id
     );
   }
 
   addVehicle(vehicle: Vehicle) {
-    SharedMemory.vehicles.push(vehicle);
+    this.vehicles.push(vehicle);
   }
 
   findLocationOrThrow(plateNumber: string): Location {
