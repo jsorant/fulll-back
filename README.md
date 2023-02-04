@@ -28,6 +28,16 @@ Tag the Cucumber scenarios to run with '@only', then run:
 npm run test:only
 ```
 
+# Run executable
+
+```
+npm link
+```
+
+```
+./fleet --help
+```
+
 # DDD questions
 
 - Park vs localize: choose only one
