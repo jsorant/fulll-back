@@ -1,14 +1,5 @@
 import { Command } from "commander";
 import { FleetController } from "../../../App/Fleet/FleetController";
-import { FleetsRepository } from "../../../App/Fleet/Commands/Ports/FleetsRepository";
-import { VehiclesRepository } from "../../../App/Fleet/Commands/Ports/VehiclesRepository";
-import { FleetProjections } from "../../../App/Fleet/Queries/Ports/FleetProjections";
-import { LocationProjections } from "../../../App/Fleet/Queries/Ports/LocationProjections";
-import { InMemoryFleetProjections } from "../Persistence/InMemory/InMemoryFleetProjections";
-import { InMemoryFleetsRepository } from "../Persistence/InMemory/InMemoryFleetsRepository";
-import { InMemoryLocationProjections } from "../Persistence/InMemory/InMemoryLocationProjections";
-import { InMemoryVehiclesRepository } from "../Persistence/InMemory/InMemoryVehiclesRepository";
-import { SharedMemory } from "../Persistence/InMemory/SharedMemory";
 
 //TODO errors handler
 //TODO locate vehicle
@@ -70,9 +61,6 @@ export class CommandLineParser {
     fleetId: string,
     vehiclePlateNumber: string
   ): Promise<void> {
-    // TO REMOVE
-    fleetId = await this.controller.createFleet("alice");
-
     await this.controller.registerVehicle(fleetId, vehiclePlateNumber);
     console.log(`Vehicle registered.`);
   }
@@ -115,10 +103,6 @@ export class CommandLineParser {
     longitude: string,
     altitude: string
   ): Promise<void> {
-    // TO REMOVE
-    fleetId = await this.controller.createFleet("alice");
-    await this.controller.registerVehicle(fleetId, vehiclePlateNumber);
-
     await this.controller.parkVehicle(
       fleetId,
       vehiclePlateNumber,

@@ -2,9 +2,13 @@ import sqlite3 from "sqlite3";
 import { Database, open } from "sqlite";
 import { existsSync } from "fs";
 
-export class FleetDatabase {
-  private static DATABASE_FILE: string = "fleets.db";
+export class Sqlite3Database {
+  private databaseFile: string;
   private db?: Database;
+
+  constructor(databaseFile: string) {
+    this.databaseFile = databaseFile;
+  }
 
   async reset(): Promise<void> {
     await this.open();
@@ -13,11 +17,11 @@ export class FleetDatabase {
     await this.close();
   }
 
-  async run(): Promise<void> {
-    this.ensureDatabaseExists();
-    this.open();
-    //
-    this.close();
+  async run(query: string): Promise<void> {
+    await this.ensureDatabaseExists();
+    await this.open();
+    await this.executeQuery(query);
+    await this.close();
   }
 
   private async ensureDatabaseExists(): Promise<void> {
@@ -29,26 +33,26 @@ export class FleetDatabase {
   }
 
   private databaseFileDoesNotExist(): boolean {
-    return !existsSync(FleetDatabase.DATABASE_FILE);
+    return !existsSync(this.databaseFile);
   }
 
   // TODO: make constants for magic numbers
   //       clean code with one function by table
   private async createTables(): Promise<void> {
-    await this.db!.exec(
+    await this.executeQuery(
       "CREATE TABLE fleet (id TEXT NOT NULL PRIMARY KEY, user_id TEXT NOT NULL)"
     );
     console.log("create");
-    await this.db!.exec(
+    await this.executeQuery(
       "CREATE TABLE fleet_vehicles (fleet_id TEXT NOT NULL, vehicle_id TEXT NOT NULL)"
     );
-    await this.db!.exec(
+    await this.executeQuery(
       "CREATE TABLE vehicle (id TEXT NOT NULL PRIMARY KEY, plate_number TEXT NOT NULL)"
     );
-    await this.db!.exec(
+    await this.executeQuery(
       "CREATE TABLE vehicle_fleets (fleet_id TEXT NOT NULL, vehicle_id TEXT NOT NULL)"
     );
-    await this.db!.exec(
+    await this.executeQuery(
       "CREATE TABLE vehicle_location (vehicle_id TEXT NOT NULL, latitude INT NOT NULL, longitude INT NOT NULL, altitude INT)"
     );
   }
@@ -56,16 +60,16 @@ export class FleetDatabase {
   // TODO: make constants for magic numbers
   //       clean code with one function by table
   private async dropTables(): Promise<void> {
-    await this.db!.exec("DROP TABLE fleet");
-    await this.db!.exec("DROP TABLE fleet_vehicles");
-    await this.db!.exec("DROP TABLE vehicle");
-    await this.db!.exec("DROP TABLE vehicle_fleets");
-    await this.db!.exec("DROP TABLE vehicle_location");
+    await this.executeQuery("DROP TABLE fleet");
+    await this.executeQuery("DROP TABLE fleet_vehicles");
+    await this.executeQuery("DROP TABLE vehicle");
+    await this.executeQuery("DROP TABLE vehicle_fleets");
+    await this.executeQuery("DROP TABLE vehicle_location");
   }
 
   private async open(): Promise<void> {
     this.db = await open({
-      filename: FleetDatabase.DATABASE_FILE,
+      filename: this.databaseFile,
       driver: sqlite3.Database,
     });
   }
@@ -74,5 +78,12 @@ export class FleetDatabase {
     if (this.db) {
       await this.db.close();
     }
+  }
+
+  private async executeQuery(query: string): Promise<void> {
+    if (this.db === undefined) {
+      throw new Error("Database is closed.");
+    }
+    await this.db.exec("DROP TABLE fleet");
   }
 }
