@@ -4,7 +4,7 @@ import { Fleet } from "../Fleet/Fleet";
 export class RegisterVehicle {
   register(vehicle: Vehicle, fleet: Fleet) {
     vehicle.registerToFleet(fleet.id.value);
-    fleet.assignVehicle(vehicle.id.value);
+    fleet.registerVehicle(vehicle.id.value);
   }
 
   // TODO: Aggregate consistency issue:

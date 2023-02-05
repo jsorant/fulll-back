@@ -25,7 +25,7 @@ export class Fleet extends RootAggregate<FleetId> {
     );
   }
 
-  assignVehicle(id: string): void {
+  registerVehicle(id: string): void {
     const vehicleId: VehicleId = VehicleId.createFrom(id);
     this.ensureVehicleIsNotAlreadyRegistered(vehicleId);
     this.vehicles.push(vehicleId);

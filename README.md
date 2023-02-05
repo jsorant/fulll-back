@@ -4,8 +4,6 @@ This repository contains a technical test regarding my application at Fulll.
 
 Instructions for this test are available at [here](https://github.com/fulll/hiring/blob/master/Backend/ddd-and-cqrs-intermediare-senior.md).
 
-A design step is available in folder 'design'. You may use [Excalidraw](https://excalidraw.com/) to open `.excalidraw` files.
-
 # Setup
 
 ```
@@ -107,6 +105,7 @@ CD: Based on my experience, I'll will cover a Kubernetes deployment in a cluster
 
 # Some possible improvements...
 
+- Park vs Localize: use only one term (ubiquitous language)
 - Clean Code in Sqlite3 layer (sorry for that, I was running out of time...)
 - Add validation methods on Entities, ValueObjects (right now every domain objects lacks basic validations (no empty values, realistic location...))
 - Create dedicated Value Objects for Latitude, Longitude and Altitude (with their own validation rules)
@@ -122,3 +121,15 @@ CD: Based on my experience, I'll will cover a Kubernetes deployment in a cluster
 - Implement CommandBus & QueryBus for more abstraction & capabilities
 - Separate databases if needed: Commands store data in a SQL database (Postgresql...), replicate data in a NoSQL database (MongoDB...) for faster access
 - Implement Event Sourcing...
+
+# Pre-dev DDD-oriented brainstorm
+
+A design step is available in the folder 'design'. You may use [Excalidraw](https://excalidraw.com/) to open the `fleet.excalidraw`.
+
+Simple Event storming:
+
+![](./design/EventStorming.png "Event storming")
+
+Definition of Root Aggregates, Entities, Value Objects:
+
+![](./design/Model.png "Model")
