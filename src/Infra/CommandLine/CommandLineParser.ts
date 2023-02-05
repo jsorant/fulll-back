@@ -1,7 +1,6 @@
 import { Command } from "commander";
 import { FleetController } from "../FleetController";
 
-//TODO add locate vehicle command
 //TODO add display fleet & vehicles command
 
 export class CommandLineParser {
@@ -18,6 +17,7 @@ export class CommandLineParser {
     this.addCreateFleet();
     this.addRegisterVehicle();
     this.addLocalizeVehicle();
+    this.addLocateVehicle();
     await this.parseWithErrorHandling();
   }
 
@@ -116,6 +116,31 @@ export class CommandLineParser {
     );
     console.log("Vehicle localized.");
     console.log("Location:", location);
+  }
+
+  private addLocateVehicle(): void {
+    this.command
+      .command("locate-vehicle")
+      .description("Locate a vehicle.")
+      .argument("<fleetId>", "Identifier of the fleet.")
+      .argument(
+        "<vehiclePlateNumber>",
+        "Plate number of the vehicle to locate."
+      )
+      .action(async (fleetId: string, vehiclePlateNumber: string) => {
+        await this.onLocateVehicle(fleetId, vehiclePlateNumber);
+      });
+  }
+
+  private async onLocateVehicle(
+    fleetId: string,
+    vehiclePlateNumber: string
+  ): Promise<void> {
+    const location = await this.controller.locateVehicle(
+      fleetId,
+      vehiclePlateNumber
+    );
+    console.log("Vehicle located at:", location);
   }
 
   private async parseWithErrorHandling(): Promise<void> {
