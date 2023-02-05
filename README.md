@@ -110,7 +110,6 @@ CD: Based on my experience, I'll will cover a Kubernetes deployment in a cluster
 - Park vs Localize: use only one term (ubiquitous language)
 - Clean Code in Sqlite3 layer (sorry for that, I was running out of time...)
 - Add validation methods on Entities, ValueObjects (right now every domain objects lacks basic validations (no empty values, realistic location...))
-- Create dedicated Value Objects for Latitude, Longitude and Altitude (with their own validation rules)
 - Add unit tests to check 'small' validation rules (keep BDD/Cucumber for nominal cases)
 - Add unit tests to validate everything in the 'Domain layer' that is not covered by BDD/Cucumber tests
 - Protect objects' internal data from external access: make public members that are 'Array' private then make getters that return a deep copy of the array (Fleet, Vehicle...)

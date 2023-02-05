@@ -1,9 +1,12 @@
 import { ValueObject } from "../../DddModel/ValueObject";
+import { Altitude } from "./Altitude";
+import { Latitude } from "./Latitude";
+import { Longitude } from "./Longitude";
 
 export class Location extends ValueObject {
-  public readonly latitudeDegrees: number;
-  public readonly longitudeDegrees: number;
-  public readonly altitudeMeters?: number;
+  public readonly latitude: Latitude;
+  public readonly longitude: Longitude;
+  public readonly altitude?: Altitude;
 
   constructor(
     latitudeDegrees: number,
@@ -11,9 +14,12 @@ export class Location extends ValueObject {
     altitudeMeters?: number
   ) {
     super();
-    this.latitudeDegrees = latitudeDegrees;
-    this.longitudeDegrees = longitudeDegrees;
-    this.altitudeMeters = altitudeMeters;
+    this.latitude = Latitude.makeFromDegrees(latitudeDegrees);
+    this.longitude = Longitude.makeFromDegrees(longitudeDegrees);
+    this.altitude =
+      altitudeMeters === undefined
+        ? undefined
+        : Altitude.makeFromMeters(altitudeMeters);
     Object.freeze(this);
   }
 }

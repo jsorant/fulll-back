@@ -138,9 +138,9 @@ export class Sqlite3VehiclesRepository implements VehiclesRepository {
       }, ${VehicleLocationTable.COLUMN_LATITUDE}, ${
         VehicleLocationTable.COLUMN_LONGITUDE
       }, ${VehicleLocationTable.COLUMN_ALTITUDE}) VALUES ('${vehicleId}', '${
-        location.latitudeDegrees
-      }', '${location.longitudeDegrees}', '${
-        location.altitudeMeters ? location.altitudeMeters : "NULL"
+        location.latitude.degrees
+      }', '${location.longitude.degrees}', '${
+        location.altitude ? location.altitude.meters : "NULL"
       }')`
     );
   }

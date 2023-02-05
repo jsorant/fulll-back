@@ -125,13 +125,7 @@ export class CommandLineParser {
       longitude,
       altitude
     );
-
-    const location = await this.controller.locateVehicle(
-      fleetId,
-      vehiclePlateNumber
-    );
     console.log("Vehicle localized.");
-    console.log("Location:", location);
   }
 
   private addLocateVehicle(): void {

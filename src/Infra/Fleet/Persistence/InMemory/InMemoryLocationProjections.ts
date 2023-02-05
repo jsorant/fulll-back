@@ -21,9 +21,9 @@ export class InMemoryLocationProjections implements LocationProjections {
 
   private adaptToLocationProjection(location: Location): LocationProjection {
     return {
-      latitudeDegrees: location.latitudeDegrees,
-      longitudeDegrees: location.longitudeDegrees,
-      altitudeMeters: location.altitudeMeters,
+      latitudeDegrees: location.latitude.degrees,
+      longitudeDegrees: location.longitude.degrees,
+      altitudeMeters: location.altitude?.meters,
     };
   }
 }
