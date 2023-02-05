@@ -84,6 +84,7 @@ npm link
 
 - Make public members on Array private and make un getter to return a copy (Fleet, Vehicle...)
 - 'deepCopy' implementation
+- Clean Code in Sqlite3 layer
 - Rename App/Fleet => App/FleetManagement,VehicleLocalization
 - Add validation method on Entity, ValueObject
 - CI/CD: build, package scripts

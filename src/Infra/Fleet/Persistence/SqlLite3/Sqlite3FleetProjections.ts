@@ -1,5 +1,5 @@
-import { FleetProjections } from "../../../../App/Fleet/Queries/Ports/FleetProjections";
-import { FleetProjection } from "../../../../App/Fleet/Queries/Views/FleetProjection";
+import { FleetProjections } from "../../../../App/Queries/Ports/FleetProjections";
+import { FleetProjection } from "../../../../App/Queries/Views/FleetProjection";
 import { Sqlite3Database } from "./Sqlite3Database";
 import { FleetTable } from "./Tables/FleetTable";
 import { FleetVehiclesTable } from "./Tables/FleetVehiclesTable";

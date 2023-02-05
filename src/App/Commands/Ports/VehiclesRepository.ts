@@ -1,4 +1,4 @@
-import { Vehicle } from "../../../../Domain/Vehicle/Vehicle";
+import { Vehicle } from "../../../Domain/Vehicle/Vehicle";
 
 export interface VehiclesRepository {
   getFromPlateNumber(plateNumber: string): Promise<Vehicle | undefined>;

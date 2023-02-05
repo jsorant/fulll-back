@@ -1,6 +1,6 @@
 import { SharedMemory } from "./SharedMemory";
-import { FleetProjections } from "../../../../App/Fleet/Queries/Ports/FleetProjections";
-import { FleetProjection } from "../../../../App/Fleet/Queries/Views/FleetProjection";
+import { FleetProjections } from "../../../../App/Queries/Ports/FleetProjections";
+import { FleetProjection } from "../../../../App/Queries/Views/FleetProjection";
 import { Fleet } from "../../../../Domain/Fleet/Fleet";
 import { Vehicle } from "../../../../Domain/Vehicle/Vehicle";
 import { VehicleId } from "../../../../Domain/Fleet/ValueObjects/VehicleId";

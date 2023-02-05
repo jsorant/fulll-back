@@ -1,5 +1,5 @@
 import { FleetProjections } from "./Ports/FleetProjections";
-import { QueryHandler } from "../../CqrsModel/QueryHandler";
+import { QueryHandler } from "../CqrsModel/QueryHandler";
 import { GetFleet } from "./GetFleet";
 import { FleetProjection } from "./Views/FleetProjection";
 

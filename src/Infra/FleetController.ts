@@ -1,19 +1,19 @@
-import { CreateFleet } from "../../App/Fleet/Commands/CreateFleet";
-import { CreateFleetHandler } from "../../App/Fleet/Commands/CreateFleetHandler";
-import { ParkVehicle } from "../../App/Fleet/Commands/ParkVehicle";
-import { ParkVehicleHandler } from "../../App/Fleet/Commands/ParkVehicleHandler";
-import { FleetsRepository } from "../../App/Fleet/Commands/Ports/FleetsRepository";
-import { VehiclesRepository } from "../../App/Fleet/Commands/Ports/VehiclesRepository";
-import { RegisterVehicle } from "../../App/Fleet/Commands/RegisterVehicle";
-import { RegisterVehicleHandler } from "../../App/Fleet/Commands/RegisterVehicleHandler";
-import { GetFleet } from "../../App/Fleet/Queries/GetFleet";
-import { GetFleetHandler } from "../../App/Fleet/Queries/GetFleetHandler";
-import { LocateVehicle } from "../../App/Fleet/Queries/LocateVehicle";
-import { LocateVehicleHandler } from "../../App/Fleet/Queries/LocateVehicleHandler";
-import { FleetProjections } from "../../App/Fleet/Queries/Ports/FleetProjections";
-import { LocationProjections } from "../../App/Fleet/Queries/Ports/LocationProjections";
-import { FleetProjection } from "../../App/Fleet/Queries/Views/FleetProjection";
-import { LocationProjection } from "../../App/Fleet/Queries/Views/LocationProjection";
+import { CreateFleet } from "../App/Commands/CreateFleet";
+import { CreateFleetHandler } from "../App/Commands/CreateFleetHandler";
+import { ParkVehicle } from "../App/Commands/ParkVehicle";
+import { ParkVehicleHandler } from "../App/Commands/ParkVehicleHandler";
+import { FleetsRepository } from "../App/Commands/Ports/FleetsRepository";
+import { VehiclesRepository } from "../App/Commands/Ports/VehiclesRepository";
+import { RegisterVehicle } from "../App/Commands/RegisterVehicle";
+import { RegisterVehicleHandler } from "../App/Commands/RegisterVehicleHandler";
+import { GetFleet } from "../App/Queries/GetFleet";
+import { GetFleetHandler } from "../App/Queries/GetFleetHandler";
+import { LocateVehicle } from "../App/Queries/LocateVehicle";
+import { LocateVehicleHandler } from "../App/Queries/LocateVehicleHandler";
+import { FleetProjections } from "../App/Queries/Ports/FleetProjections";
+import { LocationProjections } from "../App/Queries/Ports/LocationProjections";
+import { FleetProjection } from "../App/Queries/Views/FleetProjection";
+import { LocationProjection } from "../App/Queries/Views/LocationProjection";
 
 export class FleetController {
   private fleetsRepository: FleetsRepository;

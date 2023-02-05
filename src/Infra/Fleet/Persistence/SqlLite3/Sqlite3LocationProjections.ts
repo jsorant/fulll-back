@@ -1,5 +1,5 @@
-import { LocationProjections } from "../../../../App/Fleet/Queries/Ports/LocationProjections";
-import { LocationProjection } from "../../../../App/Fleet/Queries/Views/LocationProjection";
+import { LocationProjections } from "../../../../App/Queries/Ports/LocationProjections";
+import { LocationProjection } from "../../../../App/Queries/Views/LocationProjection";
 import { Sqlite3Database } from "./Sqlite3Database";
 import { VehicleLocationTable } from "./Tables/VehicleLocationTable";
 import { VehicleTable } from "./Tables/VehicleTable";

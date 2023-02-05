@@ -1,5 +1,5 @@
-import { CommandHandler } from "../../CqrsModel/CommandHandler";
-import { Fleet } from "../../../Domain/Fleet/Fleet";
+import { CommandHandler } from "../CqrsModel/CommandHandler";
+import { Fleet } from "../../Domain/Fleet/Fleet";
 import { FleetsRepository } from "./Ports/FleetsRepository";
 import { CreateFleet } from "./CreateFleet";
 
@@ -11,9 +11,9 @@ export class CreateFleetHandler implements CommandHandler<CreateFleet> {
   }
 
   async handle(command: CreateFleet): Promise<void> {
-    // Business rule
-    // Can be moved into a Domain Service and wrapped into a Domain service
-    // Cf RegisterVehicleHandler.handle() comment
+    // TODO Business rule:
+    //   Should this rule be moved into a 'Domain' wrapped into a Domain Service ?
+    //   In that case, Domain would have knowledge of repositories...
     await this.ensureFleetDoesNotAlreadyExist(command.userId);
 
     const fleet: Fleet = Fleet.createNew(command.userId);

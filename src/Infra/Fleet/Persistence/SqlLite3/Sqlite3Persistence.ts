@@ -1,7 +1,7 @@
-import { FleetsRepository } from "../../../../App/Fleet/Commands/Ports/FleetsRepository";
-import { VehiclesRepository } from "../../../../App/Fleet/Commands/Ports/VehiclesRepository";
-import { FleetProjections } from "../../../../App/Fleet/Queries/Ports/FleetProjections";
-import { LocationProjections } from "../../../../App/Fleet/Queries/Ports/LocationProjections";
+import { FleetsRepository } from "../../../../App/Commands/Ports/FleetsRepository";
+import { VehiclesRepository } from "../../../../App/Commands/Ports/VehiclesRepository";
+import { FleetProjections } from "../../../../App/Queries/Ports/FleetProjections";
+import { LocationProjections } from "../../../../App/Queries/Ports/LocationProjections";
 import { Persistence } from "../Persistence";
 import { Sqlite3Database } from "./Sqlite3Database";
 import { Table } from "./Tables/Table";

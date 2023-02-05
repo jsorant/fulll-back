@@ -1,4 +1,4 @@
-import { Command } from "../../CqrsModel/Command";
+import { Command } from "../CqrsModel/Command";
 
 export class RegisterVehicle implements Command {
   readonly plateNumber: string;

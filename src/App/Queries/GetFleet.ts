@@ -1,4 +1,4 @@
-import { Query } from "../../CqrsModel/Query";
+import { Query } from "../CqrsModel/Query";
 
 export class GetFleet implements Query {
   readonly fleetId?: string;

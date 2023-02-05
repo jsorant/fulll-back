@@ -1,14 +1,14 @@
 import assert from "assert";
 import { Given, When, Then, Before } from "@cucumber/cucumber";
 
-import { RegisterVehicle } from "../../src/App/Fleet/Commands/RegisterVehicle";
-import { RegisterVehicleHandler } from "../../src/App/Fleet/Commands/RegisterVehicleHandler";
-import { FleetsRepository } from "../../src/App/Fleet/Commands/Ports/FleetsRepository";
+import { RegisterVehicle } from "../../src/App/Commands/RegisterVehicle";
+import { RegisterVehicleHandler } from "../../src/App/Commands/RegisterVehicleHandler";
+import { FleetsRepository } from "../../src/App/Commands/Ports/FleetsRepository";
 import { assertIsAnErrorWithMessage } from "./TestTools";
-import { GetFleet } from "../../src/App/Fleet/Queries/GetFleet";
-import { GetFleetHandler } from "../../src/App/Fleet/Queries/GetFleetHandler";
-import { FleetProjection } from "../../src/App/Fleet/Queries/Views/FleetProjection";
-import { VehiclesRepository } from "../../src/App/Fleet/Commands/Ports/VehiclesRepository";
+import { GetFleet } from "../../src/App/Queries/GetFleet";
+import { GetFleetHandler } from "../../src/App/Queries/GetFleetHandler";
+import { FleetProjection } from "../../src/App/Queries/Views/FleetProjection";
+import { VehiclesRepository } from "../../src/App/Commands/Ports/VehiclesRepository";
 import {
   createForcedOrInMemoryPersistence,
   createForcedOrSqlite3Persistence,

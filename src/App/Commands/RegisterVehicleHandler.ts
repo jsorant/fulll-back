@@ -1,7 +1,7 @@
-import { Fleet } from "../../../Domain/Fleet/Fleet";
-import { RegisterVehicle } from "../../../Domain/Services/RegisterVehicle";
-import { Vehicle } from "../../../Domain/Vehicle/Vehicle";
-import { CommandHandler } from "../../CqrsModel/CommandHandler";
+import { Fleet } from "../../Domain/Fleet/Fleet";
+import { RegisterVehicle } from "../../Domain/Services/RegisterVehicle";
+import { Vehicle } from "../../Domain/Vehicle/Vehicle";
+import { CommandHandler } from "../CqrsModel/CommandHandler";
 import { FleetsRepository } from "./Ports/FleetsRepository";
 import { VehiclesRepository } from "./Ports/VehiclesRepository";
 import { RegisterVehicle as RegisterVehicleCommand } from "./RegisterVehicle";

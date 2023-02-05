@@ -1,5 +1,5 @@
 import { SharedMemory } from "./SharedMemory";
-import { FleetsRepository } from "../../../../App/Fleet/Commands/Ports/FleetsRepository";
+import { FleetsRepository } from "../../../../App/Commands/Ports/FleetsRepository";
 import { Fleet } from "../../../../Domain/Fleet/Fleet";
 
 export class InMemoryFleetsRepository implements FleetsRepository {

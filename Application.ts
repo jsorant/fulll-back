@@ -1,4 +1,4 @@
-import { CommandLineParser } from "./src/Infra/Fleet/CommandLine/CommandLineParser";
+import { CommandLineParser } from "./src/Infra/CommandLine/CommandLineParser";
 import { ApplicationBuilder } from "./ApplicationBuilder";
 
 export class Application {

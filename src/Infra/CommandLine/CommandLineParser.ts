@@ -1,9 +1,8 @@
 import { Command } from "commander";
 import { FleetController } from "../FleetController";
 
-//TODO errors handler
-//TODO locate vehicle
-//TODO display vehicles of fleet
+//TODO add locate vehicle command
+//TODO add display fleet & vehicles command
 
 export class CommandLineParser {
   private command: Command;
@@ -111,7 +110,6 @@ export class CommandLineParser {
       altitude
     );
 
-    // TODO split in dedicated command
     const location = await this.controller.locateVehicle(
       fleetId,
       vehiclePlateNumber

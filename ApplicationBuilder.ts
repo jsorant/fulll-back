@@ -1,5 +1,5 @@
-import { FleetController } from "./src/Infra/Fleet/FleetController";
-import { CommandLineParser } from "./src/Infra/Fleet/CommandLine/CommandLineParser";
+import { FleetController } from "./src/Infra/FleetController";
+import { CommandLineParser } from "./src/Infra/CommandLine/CommandLineParser";
 import { Persistence } from "./src/Infra/Fleet/Persistence/Persistence";
 import { Sqlite3Persistence } from "./src/Infra/Fleet/Persistence/SqlLite3/Sqlite3Persistence";
 

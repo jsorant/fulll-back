@@ -1,5 +1,5 @@
-import { Vehicle } from "../../../Domain/Vehicle/Vehicle";
-import { CommandHandler } from "../../CqrsModel/CommandHandler";
+import { Vehicle } from "../../Domain/Vehicle/Vehicle";
+import { CommandHandler } from "../CqrsModel/CommandHandler";
 import { ParkVehicle } from "./ParkVehicle";
 import { VehiclesRepository } from "./Ports/VehiclesRepository";
 

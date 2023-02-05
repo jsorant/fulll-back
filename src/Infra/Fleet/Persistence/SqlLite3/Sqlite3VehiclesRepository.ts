@@ -1,4 +1,4 @@
-import { VehiclesRepository } from "../../../../App/Fleet/Commands/Ports/VehiclesRepository";
+import { VehiclesRepository } from "../../../../App/Commands/Ports/VehiclesRepository";
 import { Location } from "../../../../Domain/Vehicle/ValueObjects/Location";
 import { Vehicle } from "../../../../Domain/Vehicle/Vehicle";
 import { Sqlite3Database } from "./Sqlite3Database";

@@ -1,4 +1,4 @@
-import { QueryHandler } from "../../CqrsModel/QueryHandler";
+import { QueryHandler } from "../CqrsModel/QueryHandler";
 import { LocationProjection } from "./Views/LocationProjection";
 import { LocateVehicle } from "./LocateVehicle";
 import { LocationProjections } from "./Ports/LocationProjections";

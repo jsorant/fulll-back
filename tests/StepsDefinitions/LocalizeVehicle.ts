@@ -1,14 +1,14 @@
 import assert from "assert";
 import { Given, When, Then, Before } from "@cucumber/cucumber";
 
-import { ParkVehicle } from "../../src/App/Fleet/Commands/ParkVehicle";
-import { ParkVehicleHandler } from "../../src/App/Fleet/Commands/ParkVehicleHandler";
-import { LocationProjection } from "../../src/App/Fleet/Queries/Views/LocationProjection";
-import { LocateVehicle } from "../../src/App/Fleet/Queries/LocateVehicle";
-import { LocateVehicleHandler } from "../../src/App/Fleet/Queries/LocateVehicleHandler";
+import { ParkVehicle } from "../../src/App/Commands/ParkVehicle";
+import { ParkVehicleHandler } from "../../src/App/Commands/ParkVehicleHandler";
+import { LocationProjection } from "../../src/App/Queries/Views/LocationProjection";
+import { LocateVehicle } from "../../src/App/Queries/LocateVehicle";
+import { LocateVehicleHandler } from "../../src/App/Queries/LocateVehicleHandler";
 import { assertIsAnErrorWithMessage } from "./TestTools";
-import { VehiclesRepository } from "../../src/App/Fleet/Commands/Ports/VehiclesRepository";
-import { LocationProjections } from "../../src/App/Fleet/Queries/Ports/LocationProjections";
+import { VehiclesRepository } from "../../src/App/Commands/Ports/VehiclesRepository";
+import { LocationProjections } from "../../src/App/Queries/Ports/LocationProjections";
 import {
   createForcedOrSqlite3Persistence,
   createForcedOrInMemoryPersistence,
