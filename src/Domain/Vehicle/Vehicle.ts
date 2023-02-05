@@ -64,7 +64,7 @@ export class Vehicle extends RootAggregate<VehicleId> {
   registerToFleet(id: string): void {
     const fleetId: FleetId = FleetId.createFrom(id);
     this.ensureFleetIsNotAlreadyRegistered(fleetId);
-    this.addFleet(fleetId);
+    this.fleets.push(fleetId);
   }
 
   park(
@@ -78,7 +78,7 @@ export class Vehicle extends RootAggregate<VehicleId> {
       locationAltitudeMeters
     );
     this.ensureVehicleIsNotAlreadyParkedAt(location);
-    this.doPark(location);
+    this.location = location;
   }
 
   private ensureFleetIsNotAlreadyRegistered(fleetId: FleetId): void {
@@ -94,17 +94,9 @@ export class Vehicle extends RootAggregate<VehicleId> {
     );
   }
 
-  private addFleet(fleetId: FleetId): void {
-    this.fleets.push(fleetId.clone());
-  }
-
   private ensureVehicleIsNotAlreadyParkedAt(location: Location): void {
     if (this.location && this.location.equals(location)) {
       throw new Error(`Vehicle is already parked at this location.`);
     }
-  }
-
-  private doPark(location: Location): void {
-    this.location = location.clone();
   }
 }

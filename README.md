@@ -111,7 +111,7 @@ CD: Based on my experience, I'll will cover a Kubernetes deployment in a cluster
 - Create dedicated Value Objects for Latitude, Longitude and Altitude (with their own validation rules)
 - Add unit tests to check 'small' validation rules (keep BDD/Cucumber for nominal cases)
 - Add unit tests to validate everything in the 'Domain layer' that is not covered by BDD/Cucumber tests
-- Protect objects' internal data from external access: make public members that are 'Array' private then make getters that return a copy of the array (Fleet, Vehicle...)
+- Protect objects' internal data from external access: make public members that are 'Array' private then make getters that return a deep copy of the array (Fleet, Vehicle...)
 - Implement a 'deepCopy' function (using new 'structuredClone' method ?)
 - Implement a better deep equal method (npm deep-equal ?)
 - Make Commands atomic to avoid data inconsistency: implement transactions / units of work
