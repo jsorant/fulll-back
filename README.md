@@ -61,8 +61,10 @@ npm link
 ```
 ./fleet --help # display available commands
 ./fleet create <userId> # returns fleetId on the standard output
+./fleet display <fleetId>
 ./fleet register-vehicle <fleetId> <vehiclePlateNumber>
-./fleet localize-vehicle <fleetId> <vehiclePlateNumber> lat lng [alt]
+./fleet localize-vehicle <fleetId> <vehiclePlateNumber> <latitude> <longitude> [altitude]
+./fleet locate-vehicle <fleetId> <vehiclePlateNumber>
 ```
 
 # Step 3
