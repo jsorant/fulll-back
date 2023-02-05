@@ -1,7 +1,7 @@
 import { Command } from "commander";
+import { FleetProjection } from "../../App/Queries/Views/FleetProjection";
+import { LocationProjection } from "../../App/Queries/Views/LocationProjection";
 import { FleetController } from "../FleetController";
-
-//TODO add display fleet & vehicles command
 
 export class CommandLineParser {
   private command: Command;
@@ -15,6 +15,7 @@ export class CommandLineParser {
   async parse(): Promise<void> {
     this.addDescription();
     this.addCreateFleet();
+    this.addDisplayFleet();
     this.addRegisterVehicle();
     this.addLocalizeVehicle();
     this.addLocateVehicle();
@@ -40,6 +41,21 @@ export class CommandLineParser {
   private async onCreateFleet(userId: string): Promise<void> {
     const fleetId: string = await this.controller.createFleet(userId);
     console.log(`Fleet created. Fleet id: ${fleetId}`);
+  }
+
+  private addDisplayFleet(): void {
+    this.command
+      .command("display")
+      .description("Display a fleet.")
+      .argument("<fleetId>", "Identifier of the fleet to display.")
+      .action(async (fleetId: string) => {
+        await this.onDisplayFleet(fleetId);
+      });
+  }
+
+  private async onDisplayFleet(fleetId: string): Promise<void> {
+    const fleet: FleetProjection = await this.controller.displayFleet(fleetId);
+    console.log("Fleet : ", fleet);
   }
 
   private addRegisterVehicle(): void {
@@ -136,7 +152,7 @@ export class CommandLineParser {
     fleetId: string,
     vehiclePlateNumber: string
   ): Promise<void> {
-    const location = await this.controller.locateVehicle(
+    const location: LocationProjection = await this.controller.locateVehicle(
       fleetId,
       vehiclePlateNumber
     );

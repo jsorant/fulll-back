@@ -35,8 +35,13 @@ export class FleetController {
 
   async createFleet(userId: string): Promise<string> {
     await this.createFleetOfUser(userId);
-    const fleet: FleetProjection = await this.getFleetOfUser(userId);
+    const fleet: FleetProjection = await this.getFleetFromUserId(userId);
     return fleet.id;
+  }
+
+  async displayFleet(fleetId: string): Promise<FleetProjection> {
+    const fleet: FleetProjection = await this.getFleetFromId(fleetId);
+    return fleet;
   }
 
   async registerVehicle(
@@ -95,8 +100,17 @@ export class FleetController {
     await handler.handle(command);
   }
 
-  private async getFleetOfUser(userId: string): Promise<FleetProjection> {
+  private async getFleetFromUserId(userId: string): Promise<FleetProjection> {
     const query: GetFleet = GetFleet.makeWithUserId(userId);
+    return this.getFleet(query);
+  }
+
+  private async getFleetFromId(fleetId: string): Promise<FleetProjection> {
+    const query: GetFleet = GetFleet.makeWithFleetId(fleetId);
+    return this.getFleet(query);
+  }
+
+  private async getFleet(query: GetFleet): Promise<FleetProjection> {
     const handler: GetFleetHandler = new GetFleetHandler(this.fleetProjections);
     const fleet: FleetProjection = await handler.handle(query);
     return fleet;
