@@ -11,7 +11,7 @@ export class ApplicationBuilder {
   }
 
   private buildPersistence(): Persistence {
-    // TODO: could be switch by an ENV variable in a dedicated class
+    // TODO: could be switch by an ENV variable
     // TODO: Read database file path from ENV
     return new Sqlite3Persistence("fleets.db");
   }

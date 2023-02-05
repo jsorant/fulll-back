@@ -5,20 +5,27 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\src\\App\\Fleet\\Commands\\RegisterVehicleHandler.ts",
-      "outFiles": ["${workspaceFolder}/**/*.js"]
-    },
-    {
-      "name": "Cucumber @only",
+      "name": "Cucumber InMemory @only",
       "type": "node",
       "request": "launch",
       "program": "${workspaceRoot}/node_modules/@cucumber/cucumber/bin/cucumber-js",
       "args": [
         "${workspaceRoot}/tests/Features/**/*.feature",
+        "--profile",
+        "inmemory",
+        "--tags",
+        "@only"
+      ]
+    },
+    {
+      "name": "Cucumber Sqlite3 @only",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/@cucumber/cucumber/bin/cucumber-js",
+      "args": [
+        "${workspaceRoot}/tests/Features/",
+        "--profile",
+        "sqlite3",
         "--tags",
         "@only"
       ]

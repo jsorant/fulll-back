@@ -11,10 +11,12 @@
     "typescript": "^4.5.4"
   },
   "scripts": {
-    "test": "cucumber-js ./tests/Features/ --profile default ",
-    "test:only": "cucumber-js ./tests/Features/ --profile default --tags \"@only\"",
-    "build": "tsc",
-    "debug": "node --inspect=5858 --inspect-brk --nolazy ./node_modules/@cucumber/cucumber/bin/cucumber-js ./tests/Features/ -t '@only'"
+    "test": "cucumber-js ./tests/Features/",
+    "test:inmemory": "npm test -- --profile inmemory",
+    "test:sqlite3": "npm test -- --profile sqlite3",
+    "test:inmemory:only": "npm run test:inmemory -- --tags \"@only\"",
+    "test:sqlite3:only": "npm run test:sqlite3 -- --tags \"@only\"",
+    "build": "tsc"
   },
   "dependencies": {
     "commander": "^10.0.0",

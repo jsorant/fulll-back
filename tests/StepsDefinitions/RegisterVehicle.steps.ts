@@ -9,15 +9,17 @@ import { GetFleet } from "../../src/App/Fleet/Queries/GetFleet";
 import { GetFleetHandler } from "../../src/App/Fleet/Queries/GetFleetHandler";
 import { FleetProjection } from "../../src/App/Fleet/Queries/Views/FleetProjection";
 import { VehiclesRepository } from "../../src/App/Fleet/Commands/Ports/VehiclesRepository";
-import { makePersistence } from "./Persistence";
-import { Persistence } from "../../src/Infra/Fleet/Persistence/Persistence";
+import {
+  createForcedOrInMemoryPersistence,
+  createForcedOrSqlite3Persistence,
+} from "./Persistence";
 
-Before(async function () {
-  const persistence: Persistence = await makePersistence();
-  this.fleetsRepository = persistence.getFleetsRepository();
-  this.vehiclesRepository = persistence.getVehiclesRepository();
-  this.fleetProjections = persistence.getFleetProjections();
-  this.locationProjections = persistence.getLocationProjections();
+Before({ tags: "@critical" }, async function () {
+  await createForcedOrSqlite3Persistence(this);
+});
+
+Before({ tags: "not @critical" }, async function () {
+  await createForcedOrInMemoryPersistence(this);
 });
 
 Given("a vehicle", function () {

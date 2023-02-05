@@ -12,34 +12,63 @@ A design step is available in folder 'design'. You may use [Excalidraw](https://
 npm install
 ```
 
-# Run tests
+# Cucumber tests
 
-## Run Cucumber tests
+## Run tests
+
+### Mixed
+
+Run critical tests with sqlite3 data persistence and other tests with in-memory data persistence:
 
 ```
 npm test
 ```
 
-## Run only specific Cucumber tests
+### In-memory
 
-Tag the Cucumber scenarios to run with '@only', then run:
+Run tests with in-memory data persistence:
 
 ```
-npm run test:only
+npm run test:inmemory
+npm run test:inmemory:only # only run scenarios tagged with @only
 ```
 
-# Run executable
+Run tests with sqlite3 data persistence:
+
+```
+npm run test:sqlite3
+npm run test:sqlite3:only # only run scenarios tagged with @only
+```
+
+## Debug tests (with VSCode)
+
+Some VSCode launchers are configured to run tests tagged with @only and attach the debugger to the session.
+Configure "RUN AND DEBUG" in the Debug panel then start debug session with 'F5'.
+
+- Cucumber InMemory @only: Use in-memory data persistence
+- Cucumber Sqlite3 @only: Use Sqlite3 data persistence
+
+# CLI
+
+## Setup the executable
 
 ```
 npm link
 ```
 
+## Run
+
 ```
-./fleet --help
+./fleet --help # display available commands
 ./fleet create <userId> # returns fleetId on the standard output
 ./fleet register-vehicle <fleetId> <vehiclePlateNumber>
 ./fleet localize-vehicle <fleetId> <vehiclePlateNumber> lat lng [alt]
 ```
+
+# Step 3
+
+- For code quality, you can use some tools : which one and why (in a few words) ?
+- you can consider to setup a ci/cd process : describe the necessary actions in a few words
 
 # DDD questions
 
@@ -48,27 +77,19 @@ npm link
 
 # Technical questions
 
-- How to access VO/Entities primitives ? (data persistence)
+- How to simplify VO/Entities persistence by decoupling data from logic ? (generic data persistence)
 - Should members be public readonly vs getters ?
 
 # Some possible improvements...
 
-- Implement a GUID generator for Identifier (npm uuid ?)
 - Make public members on Array private and make un getter to return a copy (Fleet, Vehicle...)
 - 'deepCopy' implementation
 - Rename App/Fleet => App/FleetManagement,VehicleLocalization
-- Properly handle a global mongoose connection
-- Add validation on Entity, ValueObject and RootAggregate
-- CI/CD
-- Make commands atomic: implement transactions
+- Add validation method on Entity, ValueObject
+- CI/CD: build, package scripts
+- Make commands atomic: implement transactions / unit of work
 - Pagination on Queries that return arrays (ListVehicles)
 - Implement a better deep equal method (npm deep-equal ?)
-- Implement typed errors
+- Implement typed errors / DomainError...
 - CommandBus & QueryBus for more abstraction & capabilities
 - Separate db if needed
-
-# Docker set up
-
-```
-Locally : docker run --name mongodb -d -p 27017:27017 mongo
-```

@@ -9,15 +9,17 @@ import { LocateVehicleHandler } from "../../src/App/Fleet/Queries/LocateVehicleH
 import { assertIsAnErrorWithMessage } from "./TestTools";
 import { VehiclesRepository } from "../../src/App/Fleet/Commands/Ports/VehiclesRepository";
 import { LocationProjections } from "../../src/App/Fleet/Queries/Ports/LocationProjections";
-import { makePersistence } from "./Persistence";
-import { Persistence } from "../../src/Infra/Fleet/Persistence/Persistence";
+import {
+  createForcedOrSqlite3Persistence,
+  createForcedOrInMemoryPersistence,
+} from "./Persistence";
 
-Before(async function () {
-  const persistence: Persistence = await makePersistence();
-  this.fleetsRepository = persistence.getFleetsRepository();
-  this.vehiclesRepository = persistence.getVehiclesRepository();
-  this.fleetProjections = persistence.getFleetProjections();
-  this.locationProjections = persistence.getLocationProjections();
+Before({ tags: "@critical" }, async function () {
+  await createForcedOrSqlite3Persistence(this);
+});
+
+Before({ tags: "not @critical" }, async function () {
+  await createForcedOrInMemoryPersistence(this);
 });
 
 Given("a location", function () {

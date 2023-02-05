@@ -10,7 +10,6 @@ Feature: Park a vehicle
         And I have registered this vehicle into my fleet
 
     @critical
-    @only
     Scenario: Successfully park a vehicle
         And a location
         When I park my vehicle at this location
