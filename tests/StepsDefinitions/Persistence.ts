@@ -5,7 +5,7 @@ import { Sqlite3Persistence } from "../../src/Infra/Fleet/Persistence/SqlLite3/S
 export async function makePersistence(): Promise<Persistence> {
   //TODO SWITCH
   //const persistence: Persistence = new InMemoryPersistence();
-  const persistence: Persistence = new Sqlite3Persistence();
+  const persistence: Persistence = new Sqlite3Persistence("fleets-test.db");
   await persistence.reset();
   return persistence;
 }

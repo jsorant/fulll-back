@@ -18,7 +18,7 @@ import { Sqlite3VehiclesRepository } from "./Sqlite3VehiclesRepository";
 export class Sqlite3Persistence implements Persistence {
   private database: Sqlite3Database;
 
-  constructor() {
+  constructor(databaseFilePath: string) {
     const tables: Array<Table> = [
       new FleetTable(),
       new FleetVehiclesTable(),
@@ -26,8 +26,7 @@ export class Sqlite3Persistence implements Persistence {
       new VehicleFleetsTable(),
       new VehicleLocationTable(),
     ];
-    // TODO read from ENV
-    this.database = new Sqlite3Database("fleets.db", tables);
+    this.database = new Sqlite3Database(databaseFilePath, tables);
   }
 
   async reset(): Promise<void> {
