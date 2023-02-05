@@ -118,6 +118,7 @@ CD: Based on my experience, I'll will cover a Kubernetes deployment in a cluster
 - Make Commands atomic to avoid data inconsistency: implement transactions / units of work
 - Implement typed errors (DomainError, then a error class for each business rule...)
 - Add pagination on Queries that may return a lot of data (arrays...)
+- Security: make sure that all external data (calls data, external component response data...) is validated, sanitized then cloned before using it
 - Implement Domain Events for even more isolation and DDD capabilities
 - Implement CommandBus & QueryBus for more abstraction & capabilities
 - Separate databases if needed: Commands store data in a SQL database (Postgresql...), replicate data in a NoSQL database (MongoDB...) for faster access
