@@ -1,8 +1,7 @@
-export class UniqueIdentifierGenerator {
-  private static count: number = 0;
+import { v4 as uuidv4 } from "uuid";
 
+export class UniqueIdentifierGenerator {
   static generate(): string {
-    this.count++;
-    return this.count.toString();
+    return uuidv4();
   }
 }

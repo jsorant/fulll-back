@@ -19,7 +19,7 @@ export class CommandLineParser {
     this.addCreateFleet();
     this.addRegisterVehicle();
     this.addLocalizeVehicle();
-    await this.command.parseAsync();
+    await this.parseWithErrorHandling();
   }
 
   private addDescription(): void {
@@ -118,5 +118,25 @@ export class CommandLineParser {
     );
     console.log("Vehicle localized.");
     console.log("Location:", location);
+  }
+
+  private async parseWithErrorHandling(): Promise<void> {
+    try {
+      await this.doParse();
+    } catch (error: any) {
+      this.handleError(error);
+    }
+  }
+
+  private async doParse() {
+    await this.command.parseAsync();
+  }
+
+  private handleError(error: any) {
+    if (error instanceof Error) {
+      console.log("Error occurred: ", (error as Error).message);
+    } else {
+      console.log("Unexpected error occurred: ", error);
+    }
   }
 }

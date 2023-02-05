@@ -45,6 +45,30 @@ async function cmd() {
   await parser.parse();
 }
 
+async function cmd2() {
+  const tables = [
+    new FleetTable(),
+    new FleetVehiclesTable(),
+    new VehicleTable(),
+    new VehicleFleetsTable(),
+    new VehicleLocationTable(),
+  ];
+  const db = new Sqlite3Database("fleets.db", tables);
+  const fleets = new Sqlite3FleetsRepository(db);
+  const vehicles = new Sqlite3VehiclesRepository(db);
+  const fleetProjections = new Sqlite3FleetProjections(db);
+  const locationProjections = new Sqlite3LocationProjections(db);
+
+  const controller: FleetController = new FleetController(
+    fleets,
+    vehicles,
+    fleetProjections,
+    locationProjections
+  );
+  const parser: CommandLineParser = new CommandLineParser(controller);
+  await parser.parse();
+}
+
 async function main() {
   console.log("a");
   const tables = [
@@ -107,4 +131,4 @@ async function main() {
   );
 }
 
-main().then(() => console.log("done."));
+cmd2().then(() => {});
