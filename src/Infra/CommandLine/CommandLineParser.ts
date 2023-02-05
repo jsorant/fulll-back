@@ -24,7 +24,7 @@ export class CommandLineParser {
   private addDescription(): void {
     this.command
       .name("fleet")
-      .description("An application to manage a fleet of vehicles.");
+      .description("An application to manage fleets of vehicles.");
   }
 
   private addCreateFleet(): void {
@@ -45,7 +45,7 @@ export class CommandLineParser {
   private addRegisterVehicle(): void {
     this.command
       .command("register-vehicle")
-      .description("Register a vehicle in a fleet.")
+      .description("Register a vehicle into a fleet.")
       .argument("<fleetId>", "Identifier of the fleet.")
       .argument(
         "<vehiclePlateNumber>",
@@ -71,7 +71,7 @@ export class CommandLineParser {
       .argument("<fleetId>", "Identifier of the fleet.")
       .argument(
         "<vehiclePlateNumber>",
-        "Plate number of the vehiule to register."
+        "Plate number of the vehicle to localize."
       )
       .argument("<latitude>", "Latitude of the location.")
       .argument("<longitude>", "Longitude of the location.")
