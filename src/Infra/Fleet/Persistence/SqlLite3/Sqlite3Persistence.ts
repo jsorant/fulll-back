@@ -7,7 +7,6 @@ import { Sqlite3Database } from "./Sqlite3Database";
 import { Table } from "./Tables/Table";
 import { FleetTable } from "./Tables/FleetTable";
 import { FleetVehiclesTable } from "./Tables/FleetVehiclesTable";
-import { VehicleFleetsTable } from "./Tables/VehicleFleetsTable";
 import { VehicleLocationTable } from "./Tables/VehicleLocationTable";
 import { VehicleTable } from "./Tables/VehicleTable";
 import { Sqlite3FleetsRepository } from "./Sqlite3FleetsRepository";
@@ -23,7 +22,6 @@ export class Sqlite3Persistence implements Persistence {
       new FleetTable(),
       new FleetVehiclesTable(),
       new VehicleTable(),
-      new VehicleFleetsTable(),
       new VehicleLocationTable(),
     ];
     this.database = new Sqlite3Database(databaseFilePath, tables);

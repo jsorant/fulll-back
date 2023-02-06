@@ -1,5 +1,4 @@
 import { Fleet } from "../../Domain/Fleet/Fleet";
-import { RegisterVehicle } from "../../Domain/Services/RegisterVehicle";
 import { Vehicle } from "../../Domain/Vehicle/Vehicle";
 import { CommandHandler } from "../CqrsModel/CommandHandler";
 import { FleetsRepository } from "./Ports/FleetsRepository";
@@ -26,7 +25,7 @@ export class RegisterVehicleHandler
       command.plateNumber
     );
     const fleet: Fleet = await this.getFleet(command.fleetId);
-    this.register(vehicle, fleet);
+    fleet.registerVehicle(vehicle.id.value);
     await this.persistData(vehicle, fleet);
   }
 
@@ -43,11 +42,6 @@ export class RegisterVehicleHandler
 
   private async getFleet(fleetId: string): Promise<Fleet> {
     return await this.fleetsRepository.get(fleetId);
-  }
-
-  private register(vehicle: Vehicle, fleet: Fleet): void {
-    const service: RegisterVehicle = new RegisterVehicle();
-    service.register(vehicle, fleet);
   }
 
   private async persistData(vehicle: Vehicle, fleet: Fleet): Promise<void> {
