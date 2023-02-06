@@ -10,7 +10,7 @@ Instructions for this test are available at [here](https://github.com/fulll/hiri
 npm install
 ```
 
-# Cucumber tests
+# Tests (BDD/Cucumber)
 
 ## Run tests
 
@@ -30,6 +30,8 @@ Run tests with in-memory data persistence:
 npm run test:inmemory
 npm run test:inmemory:only # only run scenarios tagged with @only
 ```
+
+### Sqlite3
 
 Run tests with Sqlite3 data persistence:
 
@@ -71,13 +73,13 @@ npm link
 
 ## For code quality, you can use some tools : which one and why (in a few words) ?
 
-- Use a linter (ESLint) to define rules regarding code style (indentation, semi-colons, brackets...) and code security (eslint-plugin-security)
-- Use a code formatter (Prettier) linked to the linter to auto-format code on save (integrated in the IDE)
-- Use SAST tools (Sonar, GitLab CI, GitHub actions, Snyk Code) to analyze code
-- Use tools to detect vulnerabilities on dependencies (Snyk Open Source, Sonar...)
-- Use tools to detect vulnerabilities on Docker images (Snyk Container, Sonar...)
-- Use code coverage tools (nyc), especially focused on the domain layer
-- Work in a Docker container to have a unique environment, this container is ideally the same used by the CI
+- a linter (ESLint) to define rules regarding code style (indentation, semi-colons, brackets...) and code security (eslint-plugin-security)
+- a code formatter (Prettier) linked to the linter to auto-format code on save (integrated in the IDE)
+- a SAST tools (Sonar, GitLab CI, GitHub actions, Snyk Code) to analyze code
+- tools to detect vulnerabilities on dependencies (Snyk Open Source, Sonar...)
+- tools to detect vulnerabilities on Docker images (Snyk Container, Sonar...)
+- a code coverage tools (nyc), especially focused on the domain layer
+- work in a Docker container to have a unique environment, this container is ideally the same used by the CI
 
 Shift left: make available most of those tools in dev environment so that anyone can run them, and use them automatically in the CI/CD to detect issues fast.
 
@@ -95,7 +97,7 @@ CI: Use a dedicated tool (Jenkins, GitHub Actions, GitLab CI). Implement steps i
 
 Maximize parallelization to have the fastest feedback on the build.
 
-CD: Based on my experience, I'll will cover a Kubernetes deployment in a cluster managed with OpenShift/OpenStack
+CD: Based on my experience, I will cover a Kubernetes deployment in a cluster managed with OpenShift/OpenStack
 
 - Track changes on the Docker registry (Harbor/pulling) with a dedicated tool to trigger automatic deployment (ArgoCD)
 - Write manifests (infratructure as code) to setup the pods, services, deployments, HA strategies...
@@ -105,7 +107,7 @@ CD: Based on my experience, I'll will cover a Kubernetes deployment in a cluster
 - Setup observability based on logs/metrics: Prometheus, Greylog, Grafana
 - Setup alerting based on logs/metrics: Prometheus Alert Manager, PagerDuty, StatusPage, Company messaging system (Emails/Phone/Slack/Mattermost/Discord...)
 
-# Some possible improvements...
+# Improvements...
 
 - Park vs Localize: use only one term (ubiquitous language)
 - Clean Code in Sqlite3 layer (sorry for that, I was running out of time...)
@@ -126,7 +128,7 @@ CD: Based on my experience, I'll will cover a Kubernetes deployment in a cluster
 
 # Pre-dev DDD-oriented brainstorm
 
-A design step is available in the folder 'design'. You may use [Excalidraw](https://excalidraw.com/) to open the `fleet.excalidraw`.
+A design step is available in the folder `design`. You may use [Excalidraw](https://excalidraw.com/) to open `fleet.excalidraw`.
 
 Simple Event storming:
 
